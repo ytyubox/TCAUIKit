@@ -1,26 +1,33 @@
-import Foundation
 import Combine
+import Foundation
+
 // MARK: - State
 
 @dynamicMemberLookup
-final class State<Value> {
-    let publisher: CurrentValueSubject<Value, Never>!
-    
+struct State<Value> {
+    private let _publisher: CurrentValueSubject<Value, Never>!
+
     init(_ value: Value) {
-        self.publisher = CurrentValueSubject<Value, Never>(value)
+        self._publisher = CurrentValueSubject<Value, Never>(value)
     }
-    
-    private init() { publisher = nil }
-    
+
+    private init() { _publisher = nil }
+
     var value: Value {
-        get { publisher.value}
-        set { publisher.value = newValue}
+        get { _publisher.value }
+        set { _publisher.value = newValue }
     }
-    
+
     subscript<T>(dynamicMember keyPath: WritableKeyPath<Value, T>) -> T {
-        get { publisher.value[keyPath: keyPath]}
-        set { publisher.value[keyPath: keyPath] = newValue }
+        get { _publisher.value[keyPath: keyPath] }
+        set { _publisher.value[keyPath: keyPath] = newValue }
     }
-    
+
     static var needInject: State { self.init() }
+}
+
+extension State: Publishing {
+    var publisher: CurrentValueSubject<Value, Never> {
+        _publisher
+    }
 }

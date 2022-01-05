@@ -13,14 +13,84 @@ import UIKit
 // MARK: - AppState
 
 struct AppState {
-    var count: Int
-    var favoritePrimes: [Int]
+    var count = 0
+    var favoritePrimes: [Int] = []
+    var loggedInUser: User? = nil
+    var activityFeed: [Activity] = []
+
+    struct Activity {
+        let timestamp: Date
+        let type: ActivityType
+
+        enum ActivityType {
+            case addedFavoritePrime(Int)
+            case removedFavoritePrime(Int)
+        }
+    }
+
+    struct User {
+        let id: Int
+        let name: String
+        let bio: String
+    }
+}
+
+// MARK: - Actions
+
+enum CounterAction {
+    case decrTapped
+    case incrTapped
+}
+
+enum PrimeModalAction {
+    case saveFavoritePrimeTapped
+    case removeFavoritePrimeTapped
+}
+
+enum FavoritePrimesAction {
+    case deleteFavoritePrimes(IndexSet)
+}
+
+enum AppAction {
+    case counter(CounterAction)
+    case primeModal(PrimeModalAction)
+    case favoritePrimes(FavoritePrimesAction)
+}
+
+func appReducer(value: inout AppState, action: AppAction) {
+    switch action {
+    case .counter(.decrTapped):
+        value.count -= 1
+
+    case .counter(.incrTapped):
+        value.count += 1
+
+    case .primeModal(.saveFavoritePrimeTapped):
+        value.favoritePrimes.append(value.count)
+        value.activityFeed.append(.init(timestamp: Date(), type: .addedFavoritePrime(value.count)))
+
+    case .primeModal(.removeFavoritePrimeTapped):
+        value.favoritePrimes.removeAll(where: { $0 == value.count })
+        value.activityFeed.append(.init(timestamp: Date(), type: .removedFavoritePrime(value.count)))
+
+    case let .favoritePrimes(.deleteFavoritePrimes(indexSet)):
+        for index in indexSet {
+            let prime = value.favoritePrimes[index]
+            value.favoritePrimes.remove(at: index)
+            value.activityFeed.append(.init(timestamp: Date(), type: .removedFavoritePrime(prime)))
+        }
+    }
 }
 
 // MARK: - ViewController
 
 class ViewController: UITableViewController {
-    let state = State(AppState(count: 0, favoritePrimes: []))
+    let store =
+        Store(initialValue: State(AppState(count: 0, favoritePrimes: []))) {
+            state, action in
+            appReducer(value: &state.value, action: action)
+        }
+
     lazy var dataSource = UITableViewDiffableDataSource<Int, Row>(tableView: tableView) { _, _, itemIdentifier in
         let cell = UITableViewCell()
         cell.textLabel?.text = itemIdentifier.text
@@ -43,12 +113,12 @@ class ViewController: UITableViewController {
 
     lazy var rows = [Row(text: "Counter demo", link: {
         let vc = CounterViewController.make(from: .main, id: "CounterViewController")
-        vc.state = self.state
+        vc.store = self.store
         return vc
     }),
     Row(text: "Favorite primes", link: {
         let vc = FavoritePrimesViewController()
-        vc.state = self.state
+        vc.store = self.store
         return vc
     })]
 
@@ -63,7 +133,7 @@ class ViewController: UITableViewController {
         dataSource.apply(snapshot)
     }
 
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    override func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let selectedItem = dataSource.itemIdentifier(for: indexPath) else { return }
         let vc = selectedItem.link()
         navigationController?.pushViewController(vc, animated: true)
@@ -79,7 +149,7 @@ private func ordinal(_ n: Int) -> String {
 // MARK: - CounterViewController
 
 class CounterViewController: UIViewController {
-    var state: State<AppState> = .needInject
+    var store: Store<State<AppState>, AppAction> = .needInject
     @IBOutlet private var label: UILabel!
     @IBOutlet private var nthPrimeButton: UIButton!
     var cancelable: Cancellable?
@@ -90,7 +160,7 @@ class CounterViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        cancelable = state.publisher.sink { [self] state in
+        cancelable = store.publisher.sink { [self] state in
             label?.text = state.count.description
             nthPrimeButton?.setTitle("What is the \(ordinal(state.count)) prime?", for: .normal)
         }
@@ -101,26 +171,26 @@ class CounterViewController: UIViewController {
         cancelable?.cancel()
     }
 
-    @IBAction func didTapPlusButton(_ sender: UIButton) {
-        state.count += 1
+    @IBAction func didTapPlusButton(_: UIButton) {
+        store.send(.counter(.incrTapped))
     }
 
-    @IBAction func didTapDownButton(_ sender: UIButton) {
-        state.count -= 1
+    @IBAction func didTapDownButton(_: UIButton) {
+        store.send(.counter(.decrTapped))
     }
 
-    @IBAction func didTapIsThisPrimeButton(_ sender: UIButton) {
+    @IBAction func didTapIsThisPrimeButton(_: UIButton) {
         let vc = IsPrimeModelViewController.make(from: .main, id: "IsPrimeModelViewController")
-        vc.state = state
+        vc.store = store
         present(vc, animated: true, completion: nil)
     }
 
-    @IBAction func didTapWhatNthPrimeButton(_ sender: UIButton) {
+    @IBAction func didTapWhatNthPrimeButton(_: UIButton) {
         nthPrimeButton.isEnabled = false
-        nthPrime(state.count) { prime in
+        nthPrime(store.value.count) { prime in
             DispatchQueue.main.async {
                 if let prime = prime {
-                    let alert = UIAlertController(title: "The \(ordinal(self.state.count)) prime is \(prime)", message: nil, preferredStyle: .alert)
+                    let alert = UIAlertController(title: "The \(ordinal(self.store.value.count)) prime is \(prime)", message: nil, preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "ok", style: .default, handler: { _ in
                         alert.dismiss(animated: true, completion: nil)
                     }))
@@ -144,33 +214,33 @@ private func isPrime(_ p: Int) -> Bool {
 // MARK: - IsPrimeModelViewController
 
 class IsPrimeModelViewController: UIViewController {
-    var state: State<AppState>!
+    var store: Store<State<AppState>, AppAction> = .needInject
     @IBOutlet var label: UILabel!
     @IBOutlet var button: UIButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        if isPrime(state.count) {
-            label.text = "\(String(describing: state.count)) is prime 🎉"
+        if isPrime(store.value.count) {
+            label.text = "\(String(describing: store.value.count)) is prime 🎉"
             updateButton()
 
         } else {
-            label.text = "\(String(describing: state.count)) is not prime :("
+            label.text = "\(String(describing: store.value.count)) is not prime :("
             button.isHidden = true
         }
     }
 
-    @IBAction func didTapSaveButton(_ sender: UIButton) {
-        if state.favoritePrimes.contains(state.count) {
-            state.favoritePrimes.removeAll(where: { $0 == self.state.count })
+    @IBAction func didTapSaveButton(_: UIButton) {
+        if store.value.favoritePrimes.contains(store.value.count) {
+            store.send(.primeModal(.removeFavoritePrimeTapped))
         } else {
-            state.favoritePrimes.append(state.count)
+            store.send(.primeModal(.saveFavoritePrimeTapped))
         }
         updateButton()
     }
 
     fileprivate func updateButton() {
-        if state.favoritePrimes.contains(state.count) {
+        if store.value.favoritePrimes.contains(store.value.count) {
             button.setTitle("Remove from favorite primes", for: .normal)
         } else {
             button.setTitle("Save to favorite primes", for: .normal)
@@ -181,8 +251,8 @@ class IsPrimeModelViewController: UIViewController {
 // MARK: - FavoritePrimesViewController
 
 class FavoritePrimesViewController: UITableViewController {
-    var state: State<AppState> = .needInject
-
+    var store: Store<State<AppState>, AppAction> = .needInject
+    var cancelable: Cancellable?
     lazy var dataSource = UITableViewDiffableDataSource<Int, Int>(tableView: tableView) { _, _, itemIdentifier in
         let cell = UITableViewCell()
         cell.textLabel?.text = itemIdentifier.description
@@ -192,19 +262,22 @@ class FavoritePrimesViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Favorite Primes"
-        let snapshot = makeSnapShot()
         tableView.dataSource = dataSource
-        dataSource.apply(snapshot)
     }
 
-    func makeSnapShot() -> NSDiffableDataSourceSnapshot<Int, Int> {
-        var snapshot = NSDiffableDataSourceSnapshot<Int, Int>()
-        snapshot.appendSections([0])
-        snapshot.appendItems(state.favoritePrimes, toSection: 0)
-        return snapshot
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        cancelable = store.publisher.sink(receiveValue: { state in
+            self.dataSource.apply(makeSnapShot(state))
+        })
     }
 
-    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        cancelable?.cancel()
+    }
+
+    override func tableView(_: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         UISwipeActionsConfiguration(
             actions:
             [
@@ -212,8 +285,7 @@ class FavoritePrimesViewController: UITableViewController {
                     style: .destructive,
                     title: "delete"
                 ) { [self] _, _, callback in
-                    self.state.favoritePrimes.remove(at: indexPath.row)
-                    dataSource.apply(makeSnapShot())
+                    self.store.send(.favoritePrimes(.deleteFavoritePrimes(IndexSet(integer: indexPath.row))))
                     callback(true)
                 },
             ])
@@ -272,4 +344,11 @@ func wolframAlpha(query: String, callback: @escaping (WolframAlphaResult?) -> Vo
         )
     }
     .resume()
+}
+
+private func makeSnapShot(_ state: AppState) -> NSDiffableDataSourceSnapshot<Int, Int> {
+    var snapshot = NSDiffableDataSourceSnapshot<Int, Int>()
+    snapshot.appendSections([0])
+    snapshot.appendItems(state.favoritePrimes, toSection: 0)
+    return snapshot
 }
