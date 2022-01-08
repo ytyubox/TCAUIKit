@@ -3,12 +3,13 @@ import XCTest
 final class Ep69ExercisesTests: XCTestCase {
     func testQ1() throws {
         throw XCTSkip(
-    #"""
-    reducer.pullbark(\.self)
-    which keyPath type is WritableKeypath<Root, Root>
-    """#
+            #"""
+            reducer.pullbark(\.self)
+            which keyPath type is WritableKeypath<Root, Root>
+            """#
         )
     }
+
     func testQ2() throws {
         throw XCTSkip(
             """
@@ -19,6 +20,7 @@ final class Ep69ExercisesTests: XCTestCase {
             """
         )
     }
+
     func testQ3() throws {
         throw XCTSkip(
             """
@@ -26,22 +28,22 @@ final class Ep69ExercisesTests: XCTestCase {
             which can be `KeyPath<GlobalAction, LocalAction?>
             """)
     }
-    
+
     func testQ4() throws {
-    throw XCTSkip("""
-    it is in the next episode that is so called `view`?
-    """)
+        throw XCTSkip("""
+        it is in the next episode that is so called `view`?
+        """)
     }
-    
+
     func testQ5() throws {
         throw XCTSkip("""
-    yet to understand
-    """)
+        yet to understand
+        """)
     }
+
     func testQ6() throws {
         throw XCTSkip("""
-    yet to understand
-    """)
+        yet to understand
+        """)
     }
 }
-

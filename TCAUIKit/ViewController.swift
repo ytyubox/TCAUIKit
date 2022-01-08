@@ -8,14 +8,14 @@
  */
 
 import Combine
+import ComposableArchitecture
 import UIKit
 
-
-
 // MARK: - ViewController
+
 typealias AppStore = Store<State<AppState>, AppAction>
 class ViewController: UITableViewController {
-    let store:AppStore =
+    let store: AppStore =
         Store(initialValue:
             State(
                 AppState(count: 0, favoritePrimes: [])
@@ -52,7 +52,7 @@ class ViewController: UITableViewController {
     }),
     Row(text: "Favorite primes", link: {
         let vc = FavoritePrimesViewController()
-        vc.store = self.store
+        vc.store = self.store.view(\.favoritePrimes)
         return vc
     })]
 
@@ -170,7 +170,7 @@ class IsPrimeModelViewController: UIViewController {
 // MARK: - FavoritePrimesViewController
 
 class FavoritePrimesViewController: UITableViewController {
-    var store: AppStore = .needInject
+    var store: Store<State<[Int]>, AppAction> = .needInject
     var cancelable: Cancellable?
     lazy var dataSource = UITableViewDiffableDataSource<Int, Int>(tableView: tableView) { _, _, itemIdentifier in
         let cell = UITableViewCell()
@@ -217,10 +217,10 @@ class FavoritePrimesViewController: UITableViewController {
             ])
     }
 
-    private static func makeSnapShot(_ state: AppState) -> NSDiffableDataSourceSnapshot<Int, Int> {
+    private static func makeSnapShot(_ state: [Int]) -> NSDiffableDataSourceSnapshot<Int, Int> {
         var snapshot = NSDiffableDataSourceSnapshot<Int, Int>()
         snapshot.appendSections([0])
-        snapshot.appendItems(state.favoritePrimes, toSection: 0)
+        snapshot.appendItems(state, toSection: 0)
         return snapshot
     }
 }
