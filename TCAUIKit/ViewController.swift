@@ -13,9 +13,9 @@ import UIKit
 
 
 // MARK: - ViewController
-
+typealias AppStore = Store<State<AppState>, AppAction?>
 class ViewController: UITableViewController {
-    let store =
+    let store:AppStore =
         Store(initialValue:
             State(
                 AppState(count: 0, favoritePrimes: [])
@@ -77,7 +77,7 @@ class ViewController: UITableViewController {
 // MARK: - CounterViewController
 
 class CounterViewController: UIViewController {
-    var store: Store<State<AppState>, AppAction> = .needInject
+    var store: AppStore = .needInject
     @IBOutlet private var label: UILabel!
     @IBOutlet private var nthPrimeButton: UIButton!
     var cancelable: Cancellable?
@@ -133,7 +133,7 @@ class CounterViewController: UIViewController {
 // MARK: - IsPrimeModelViewController
 
 class IsPrimeModelViewController: UIViewController {
-    var store: Store<State<AppState>, AppAction> = .needInject
+    var store: AppStore = .needInject
     @IBOutlet var label: UILabel!
     @IBOutlet var button: UIButton!
 
@@ -170,7 +170,7 @@ class IsPrimeModelViewController: UIViewController {
 // MARK: - FavoritePrimesViewController
 
 class FavoritePrimesViewController: UITableViewController {
-    var store: Store<State<AppState>, AppAction> = .needInject
+    var store: AppStore = .needInject
     var cancelable: Cancellable?
     lazy var dataSource = UITableViewDiffableDataSource<Int, Int>(tableView: tableView) { _, _, itemIdentifier in
         let cell = UITableViewCell()
