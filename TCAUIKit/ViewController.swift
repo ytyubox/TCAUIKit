@@ -86,7 +86,11 @@ func appReducer(value: inout AppState, action: AppAction) {
 
 class ViewController: UITableViewController {
     let store =
-        Store(initialValue: State(AppState(count: 0, favoritePrimes: []))) {
+        Store(initialValue:
+            State(
+                AppState(count: 0, favoritePrimes: [])
+            )
+        ) {
             state, action in
             appReducer(value: &state.value, action: action)
         }
@@ -138,12 +142,6 @@ class ViewController: UITableViewController {
         let vc = selectedItem.link()
         navigationController?.pushViewController(vc, animated: true)
     }
-}
-
-private func ordinal(_ n: Int) -> String {
-    let formatter = NumberFormatter()
-    formatter.numberStyle = .ordinal
-    return formatter.string(for: n) ?? ""
 }
 
 // MARK: - CounterViewController
@@ -200,15 +198,6 @@ class CounterViewController: UIViewController {
             }
         }
     }
-}
-
-private func isPrime(_ p: Int) -> Bool {
-    if p <= 1 { return false }
-    if p <= 3 { return true }
-    for i in 2 ... Int(sqrtf(Float(p))) {
-        if p % i == 0 { return false }
-    }
-    return true
 }
 
 // MARK: - IsPrimeModelViewController
@@ -268,7 +257,7 @@ class FavoritePrimesViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         cancelable = store.publisher.sink(receiveValue: { state in
-            self.dataSource.apply(makeSnapShot(state))
+            self.dataSource.apply(Self.makeSnapShot(state))
         })
     }
 
@@ -290,65 +279,11 @@ class FavoritePrimesViewController: UITableViewController {
                 },
             ])
     }
-}
 
-func nthPrime(_ n: Int, callback: @escaping (Int?) -> Void) {
-    wolframAlpha(query: "prime \(n)") { result in
-        callback(
-            result
-                .flatMap {
-                    $0.queryresult
-                        .pods
-                        .first(where: { $0.primary == .some(true) })?
-                        .subpods
-                        .first?
-                        .plaintext
-                }
-                .flatMap(Int.init)
-        )
+    private static func makeSnapShot(_ state: AppState) -> NSDiffableDataSourceSnapshot<Int, Int> {
+        var snapshot = NSDiffableDataSourceSnapshot<Int, Int>()
+        snapshot.appendSections([0])
+        snapshot.appendItems(state.favoritePrimes, toSection: 0)
+        return snapshot
     }
-}
-
-// MARK: - WolframAlphaResult
-
-struct WolframAlphaResult: Decodable {
-    let queryresult: QueryResult
-
-    struct QueryResult: Decodable {
-        let pods: [Pod]
-
-        struct Pod: Decodable {
-            let primary: Bool?
-            let subpods: [SubPod]
-
-            struct SubPod: Decodable {
-                let plaintext: String
-            }
-        }
-    }
-}
-
-func wolframAlpha(query: String, callback: @escaping (WolframAlphaResult?) -> Void) {
-    var components = URLComponents(string: "https://api.wolframalpha.com/v2/query")!
-    components.queryItems = [
-        URLQueryItem(name: "input", value: query),
-        URLQueryItem(name: "format", value: "plaintext"),
-        URLQueryItem(name: "output", value: "JSON"),
-        URLQueryItem(name: "appid", value: wolframAlphaApiKey),
-    ]
-
-    URLSession.shared.dataTask(with: components.url(relativeTo: nil)!) { data, _, _ in
-        callback(
-            data
-                .flatMap { try? JSONDecoder().decode(WolframAlphaResult.self, from: $0) }
-        )
-    }
-    .resume()
-}
-
-private func makeSnapShot(_ state: AppState) -> NSDiffableDataSourceSnapshot<Int, Int> {
-    var snapshot = NSDiffableDataSourceSnapshot<Int, Int>()
-    snapshot.appendSections([0])
-    snapshot.appendItems(state.favoritePrimes, toSection: 0)
-    return snapshot
 }

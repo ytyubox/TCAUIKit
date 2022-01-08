@@ -9,7 +9,10 @@
 /* Begin PBXBuildFile section */
 		D208CF0D27834D14005F74EC /* Wolfram.swift in Sources */ = {isa = PBXBuildFile; fileRef = D208CF0C27834D14005F74EC /* Wolfram.swift */; };
 		D251431A27853C230096EC34 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = D251431927853C230096EC34 /* State.swift */; };
-		D251431C27853D110096EC34 /* helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D251431B27853D110096EC34 /* helper.swift */; };
+		D251431C27853D110096EC34 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D251431B27853D110096EC34 /* Helper.swift */; };
+		D251431E278571980096EC34 /* Reducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D251431D278571980096EC34 /* Reducer.swift */; };
+		D282FF1C278965B900E2C54C /* TCAUIKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D282FF1B278965B900E2C54C /* TCAUIKitTests.swift */; };
+		D282FF23278965CC00E2C54C /* Ep68ExercisesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D282FF22278965CC00E2C54C /* Ep68ExercisesTests.swift */; };
 		D2B7B3B72782E690003C9660 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B7B3B62782E690003C9660 /* AppDelegate.swift */; };
 		D2B7B3B92782E690003C9660 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B7B3B82782E690003C9660 /* SceneDelegate.swift */; };
 		D2B7B3BB2782E690003C9660 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B7B3BA2782E690003C9660 /* ViewController.swift */; };
@@ -19,10 +22,25 @@
 		D2B7B3CB2782E7F9003C9660 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B7B3CA2782E7F9003C9660 /* Store.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		D282FF1D278965B900E2C54C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2B7B3AB2782E690003C9660 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2B7B3B22782E690003C9660;
+			remoteInfo = TCAUIKit;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		D208CF0C27834D14005F74EC /* Wolfram.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wolfram.swift; sourceTree = "<group>"; };
 		D251431927853C230096EC34 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
-		D251431B27853D110096EC34 /* helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = helper.swift; sourceTree = "<group>"; };
+		D251431B27853D110096EC34 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
+		D251431D278571980096EC34 /* Reducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reducer.swift; sourceTree = "<group>"; };
+		D282FF142789648C00E2C54C /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = MyPlayground.playground; path = TCAUIKit/MyPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		D282FF19278965B900E2C54C /* TCAUIKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TCAUIKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D282FF1B278965B900E2C54C /* TCAUIKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCAUIKitTests.swift; sourceTree = "<group>"; };
+		D282FF22278965CC00E2C54C /* Ep68ExercisesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ep68ExercisesTests.swift; sourceTree = "<group>"; };
 		D2B7B3B32782E690003C9660 /* TCAUIKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TCAUIKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2B7B3B62782E690003C9660 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D2B7B3B82782E690003C9660 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -35,6 +53,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		D282FF16278965B900E2C54C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D2B7B3B02782E690003C9660 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -45,10 +70,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D282FF1A278965B900E2C54C /* TCAUIKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				D282FF1B278965B900E2C54C /* TCAUIKitTests.swift */,
+				D282FF22278965CC00E2C54C /* Ep68ExercisesTests.swift */,
+			);
+			path = TCAUIKitTests;
+			sourceTree = "<group>";
+		};
 		D2B7B3AA2782E690003C9660 = {
 			isa = PBXGroup;
 			children = (
+				D282FF142789648C00E2C54C /* MyPlayground.playground */,
 				D2B7B3B52782E690003C9660 /* TCAUIKit */,
+				D282FF1A278965B900E2C54C /* TCAUIKitTests */,
 				D2B7B3B42782E690003C9660 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -57,6 +93,7 @@
 			isa = PBXGroup;
 			children = (
 				D2B7B3B32782E690003C9660 /* TCAUIKit.app */,
+				D282FF19278965B900E2C54C /* TCAUIKitTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -65,16 +102,17 @@
 			isa = PBXGroup;
 			children = (
 				D2B7B3B62782E690003C9660 /* AppDelegate.swift */,
-				D2B7B3B82782E690003C9660 /* SceneDelegate.swift */,
-				D2B7B3BA2782E690003C9660 /* ViewController.swift */,
-				D251431927853C230096EC34 /* State.swift */,
-				D208CF0C27834D14005F74EC /* Wolfram.swift */,
-				D2B7B3CA2782E7F9003C9660 /* Store.swift */,
-				D251431B27853D110096EC34 /* helper.swift */,
-				D2B7B3BC2782E690003C9660 /* Main.storyboard */,
 				D2B7B3BF2782E691003C9660 /* Assets.xcassets */,
-				D2B7B3C12782E691003C9660 /* LaunchScreen.storyboard */,
+				D251431B27853D110096EC34 /* Helper.swift */,
 				D2B7B3C42782E691003C9660 /* Info.plist */,
+				D2B7B3C12782E691003C9660 /* LaunchScreen.storyboard */,
+				D2B7B3BC2782E690003C9660 /* Main.storyboard */,
+				D251431D278571980096EC34 /* Reducer.swift */,
+				D2B7B3B82782E690003C9660 /* SceneDelegate.swift */,
+				D251431927853C230096EC34 /* State.swift */,
+				D2B7B3CA2782E7F9003C9660 /* Store.swift */,
+				D2B7B3BA2782E690003C9660 /* ViewController.swift */,
+				D208CF0C27834D14005F74EC /* Wolfram.swift */,
 			);
 			path = TCAUIKit;
 			sourceTree = "<group>";
@@ -82,6 +120,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		D282FF18278965B900E2C54C /* TCAUIKitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D282FF1F278965B900E2C54C /* Build configuration list for PBXNativeTarget "TCAUIKitTests" */;
+			buildPhases = (
+				D282FF15278965B900E2C54C /* Sources */,
+				D282FF16278965B900E2C54C /* Frameworks */,
+				D282FF17278965B900E2C54C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D282FF1E278965B900E2C54C /* PBXTargetDependency */,
+			);
+			name = TCAUIKitTests;
+			productName = TCAUIKitTests;
+			productReference = D282FF19278965B900E2C54C /* TCAUIKitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		D2B7B3B22782E690003C9660 /* TCAUIKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D2B7B3C72782E691003C9660 /* Build configuration list for PBXNativeTarget "TCAUIKit" */;
@@ -109,6 +165,10 @@
 				LastSwiftUpdateCheck = 1320;
 				LastUpgradeCheck = 1320;
 				TargetAttributes = {
+					D282FF18278965B900E2C54C = {
+						CreatedOnToolsVersion = 13.2.1;
+						TestTargetID = D2B7B3B22782E690003C9660;
+					};
 					D2B7B3B22782E690003C9660 = {
 						CreatedOnToolsVersion = 13.2.1;
 					};
@@ -128,11 +188,19 @@
 			projectRoot = "";
 			targets = (
 				D2B7B3B22782E690003C9660 /* TCAUIKit */,
+				D282FF18278965B900E2C54C /* TCAUIKitTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		D282FF17278965B900E2C54C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D2B7B3B12782E690003C9660 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -146,13 +214,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		D282FF15278965B900E2C54C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D282FF1C278965B900E2C54C /* TCAUIKitTests.swift in Sources */,
+				D282FF23278965CC00E2C54C /* Ep68ExercisesTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D2B7B3AF2782E690003C9660 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				D2B7B3BB2782E690003C9660 /* ViewController.swift in Sources */,
 				D2B7B3CB2782E7F9003C9660 /* Store.swift in Sources */,
-				D251431C27853D110096EC34 /* helper.swift in Sources */,
+				D251431E278571980096EC34 /* Reducer.swift in Sources */,
+				D251431C27853D110096EC34 /* Helper.swift in Sources */,
 				D208CF0D27834D14005F74EC /* Wolfram.swift in Sources */,
 				D2B7B3B72782E690003C9660 /* AppDelegate.swift in Sources */,
 				D2B7B3B92782E690003C9660 /* SceneDelegate.swift in Sources */,
@@ -161,6 +239,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D282FF1E278965B900E2C54C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2B7B3B22782E690003C9660 /* TCAUIKit */;
+			targetProxy = D282FF1D278965B900E2C54C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		D2B7B3BC2782E690003C9660 /* Main.storyboard */ = {
@@ -182,6 +268,42 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		D282FF20278965B900E2C54C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3AMPL46LPV;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.inkinyu.TCAUIKitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TCAUIKit.app/TCAUIKit";
+			};
+			name = Debug;
+		};
+		D282FF21278965B900E2C54C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3AMPL46LPV;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.inkinyu.TCAUIKitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TCAUIKit.app/TCAUIKit";
+			};
+			name = Release;
+		};
 		D2B7B3C52782E691003C9660 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -357,6 +479,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		D282FF1F278965B900E2C54C /* Build configuration list for PBXNativeTarget "TCAUIKitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D282FF20278965B900E2C54C /* Debug */,
+				D282FF21278965B900E2C54C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		D2B7B3AE2782E690003C9660 /* Build configuration list for PBXProject "TCAUIKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

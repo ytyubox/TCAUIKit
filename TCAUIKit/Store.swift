@@ -14,6 +14,8 @@ final class Store<Value, Action> {
         reducer(&value, action)
     }
 
+    // MARK: - Helper
+
     private init() {
         value = nil
         reducer = { _, _ in }
