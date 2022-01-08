@@ -55,33 +55,57 @@ enum AppAction {
     case counter(CounterAction)
     case primeModal(PrimeModalAction)
     case favoritePrimes(FavoritePrimesAction)
+    
+    var counter: CounterAction? {
+        get {
+          guard case let .counter(value) = self else { return nil }
+          return value
+        }
+        set {
+          guard case .counter = self, let newValue = newValue else { return }
+          self = .counter(newValue)
+        }
+      }
+
+      var primeModal: PrimeModalAction? {
+        get {
+          guard case let .primeModal(value) = self else { return nil }
+          return value
+        }
+        set {
+          guard case .primeModal = self, let newValue = newValue else { return }
+          self = .primeModal(newValue)
+        }
+      }
+
+      var favoritePrimes: FavoritePrimesAction? {
+        get {
+          guard case let .favoritePrimes(value) = self else { return nil }
+          return value
+        }
+        set {
+          guard case .favoritePrimes = self, let newValue = newValue else { return }
+          self = .favoritePrimes(newValue)
+        }
+      }
 }
 
-func counterReducer(state: inout Int, action: AppAction) {
+func counterReducer(state: inout Int, action: CounterAction) {
   switch action {
-  case .counter(.decrTapped):
-    state -= 1
-
-  case .counter(.incrTapped):
-    state += 1
-
-  default:
-    break
+  case .decrTapped: state -= 1
+  case .incrTapped: state += 1
   }
 }
 
-func primeModalReducer(state: inout AppState, action: AppAction) {
+func primeModalReducer(state: inout AppState, action: PrimeModalAction) {
   switch action {
-  case .primeModal(.removeFavoritePrimeTapped):
+  case .removeFavoritePrimeTapped:
     state.favoritePrimes.removeAll(where: { $0 == state.count })
     state.activityFeed.append(.init(timestamp: Date(), type: .addedFavoritePrime(state.count)))
 
-  case .primeModal(.saveFavoritePrimeTapped):
+  case .saveFavoritePrimeTapped:
     state.favoritePrimes.append(state.count)
     state.activityFeed.append(.init(timestamp: Date(), type: .removedFavoritePrime(state.count)))
-
-  default:
-    break
   }
 }
 
@@ -90,16 +114,13 @@ struct FavoritePrimesState {
   var activityFeed: [AppState.Activity]
 }
 
-func favoritePrimesReducer(state: inout FavoritePrimesState, action: AppAction) {
+func favoritePrimesReducer(state: inout FavoritePrimesState, action: FavoritePrimesAction) {
   switch action {
-  case let .favoritePrimes(.deleteFavoritePrimes(indexSet)):
+  case let .deleteFavoritePrimes(indexSet):
     for index in indexSet {
       state.activityFeed.append(.init(timestamp: Date(), type: .removedFavoritePrime(state.favoritePrimes[index])))
       state.favoritePrimes.remove(at: index)
     }
-
-  default:
-    break
   }
 }
 
@@ -118,10 +139,10 @@ extension AppState {
   }
 }
 
-let appReducer = combine(
-  pullback(counterReducer, value: \.count),
-  primeModalReducer,
-  pullback(favoritePrimesReducer, value: \.favoritePrimesState)
+let appReducer: (inout AppState, AppAction) -> Void = combine(
+    pullback(counterReducer, value: \.count, action: \.counter),
+    pullback(primeModalReducer, value: \.self, action: \.primeModal),
+    pullback(favoritePrimesReducer, value: \.favoritePrimesState, action: \.favoritePrimes)
 )
 
 // MARK: - ViewController
