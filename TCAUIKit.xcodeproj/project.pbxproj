@@ -16,6 +16,7 @@
 		D282FF252789740400E2C54C /* Ep69ExercisesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D282FF242789740400E2C54C /* Ep69ExercisesTests.swift */; };
 		D282FF2727898BFA00E2C54C /* Ep70ExercisesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D282FF2627898BFA00E2C54C /* Ep70ExercisesTests.swift */; };
 		D282FF2927898F8300E2C54C /* AppState+Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = D282FF2827898F8300E2C54C /* AppState+Action.swift */; };
+		D282FF2B278994ED00E2C54C /* Ep71ExercisesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D282FF2A278994ED00E2C54C /* Ep71ExercisesTests.swift */; };
 		D2B7B3B72782E690003C9660 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B7B3B62782E690003C9660 /* AppDelegate.swift */; };
 		D2B7B3B92782E690003C9660 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B7B3B82782E690003C9660 /* SceneDelegate.swift */; };
 		D2B7B3BB2782E690003C9660 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B7B3BA2782E690003C9660 /* ViewController.swift */; };
@@ -47,6 +48,7 @@
 		D282FF242789740400E2C54C /* Ep69ExercisesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ep69ExercisesTests.swift; sourceTree = "<group>"; };
 		D282FF2627898BFA00E2C54C /* Ep70ExercisesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ep70ExercisesTests.swift; sourceTree = "<group>"; };
 		D282FF2827898F8300E2C54C /* AppState+Action.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppState+Action.swift"; sourceTree = "<group>"; };
+		D282FF2A278994ED00E2C54C /* Ep71ExercisesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ep71ExercisesTests.swift; sourceTree = "<group>"; };
 		D2B7B3B32782E690003C9660 /* TCAUIKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TCAUIKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2B7B3B62782E690003C9660 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D2B7B3B82782E690003C9660 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 				D282FF22278965CC00E2C54C /* Ep68ExercisesTests.swift */,
 				D282FF242789740400E2C54C /* Ep69ExercisesTests.swift */,
 				D282FF2627898BFA00E2C54C /* Ep70ExercisesTests.swift */,
+				D282FF2A278994ED00E2C54C /* Ep71ExercisesTests.swift */,
 			);
 			path = TCAUIKitTests;
 			sourceTree = "<group>";
@@ -231,6 +234,7 @@
 				D282FF2727898BFA00E2C54C /* Ep70ExercisesTests.swift in Sources */,
 				D282FF23278965CC00E2C54C /* Ep68ExercisesTests.swift in Sources */,
 				D282FF252789740400E2C54C /* Ep69ExercisesTests.swift in Sources */,
+				D282FF2B278994ED00E2C54C /* Ep71ExercisesTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

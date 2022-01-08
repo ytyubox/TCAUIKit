@@ -13,7 +13,7 @@ import UIKit
 
 
 // MARK: - ViewController
-typealias AppStore = Store<State<AppState>, AppAction?>
+typealias AppStore = Store<State<AppState>, AppAction>
 class ViewController: UITableViewController {
     let store:AppStore =
         Store(initialValue:
@@ -22,7 +22,7 @@ class ViewController: UITableViewController {
             )
         ) {
             state, action in
-            appReducer(&state.value, action)
+            AppReducer(&state.value, action)
         }
 
     lazy var dataSource = UITableViewDiffableDataSource<Int, Row>(tableView: tableView) { _, _, itemIdentifier in
