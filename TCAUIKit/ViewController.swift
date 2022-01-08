@@ -57,30 +57,72 @@ enum AppAction {
     case favoritePrimes(FavoritePrimesAction)
 }
 
-func appReducer(value: inout AppState, action: AppAction) {
-    switch action {
-    case .counter(.decrTapped):
-        value.count -= 1
+func counterReducer(state: inout Int, action: AppAction) {
+  switch action {
+  case .counter(.decrTapped):
+    state -= 1
 
-    case .counter(.incrTapped):
-        value.count += 1
+  case .counter(.incrTapped):
+    state += 1
 
-    case .primeModal(.saveFavoritePrimeTapped):
-        value.favoritePrimes.append(value.count)
-        value.activityFeed.append(.init(timestamp: Date(), type: .addedFavoritePrime(value.count)))
-
-    case .primeModal(.removeFavoritePrimeTapped):
-        value.favoritePrimes.removeAll(where: { $0 == value.count })
-        value.activityFeed.append(.init(timestamp: Date(), type: .removedFavoritePrime(value.count)))
-
-    case let .favoritePrimes(.deleteFavoritePrimes(indexSet)):
-        for index in indexSet {
-            let prime = value.favoritePrimes[index]
-            value.favoritePrimes.remove(at: index)
-            value.activityFeed.append(.init(timestamp: Date(), type: .removedFavoritePrime(prime)))
-        }
-    }
+  default:
+    break
+  }
 }
+
+func primeModalReducer(state: inout AppState, action: AppAction) {
+  switch action {
+  case .primeModal(.removeFavoritePrimeTapped):
+    state.favoritePrimes.removeAll(where: { $0 == state.count })
+    state.activityFeed.append(.init(timestamp: Date(), type: .addedFavoritePrime(state.count)))
+
+  case .primeModal(.saveFavoritePrimeTapped):
+    state.favoritePrimes.append(state.count)
+    state.activityFeed.append(.init(timestamp: Date(), type: .removedFavoritePrime(state.count)))
+
+  default:
+    break
+  }
+}
+
+struct FavoritePrimesState {
+  var favoritePrimes: [Int]
+  var activityFeed: [AppState.Activity]
+}
+
+func favoritePrimesReducer(state: inout FavoritePrimesState, action: AppAction) {
+  switch action {
+  case let .favoritePrimes(.deleteFavoritePrimes(indexSet)):
+    for index in indexSet {
+      state.activityFeed.append(.init(timestamp: Date(), type: .removedFavoritePrime(state.favoritePrimes[index])))
+      state.favoritePrimes.remove(at: index)
+    }
+
+  default:
+    break
+  }
+}
+
+extension AppState {
+  var favoritePrimesState: FavoritePrimesState {
+    get {
+      FavoritePrimesState(
+        favoritePrimes: self.favoritePrimes,
+        activityFeed: self.activityFeed
+      )
+    }
+    set {
+      self.favoritePrimes = newValue.favoritePrimes
+      self.activityFeed = newValue.activityFeed
+    }
+  }
+}
+
+let appReducer = combine(
+  pullback(counterReducer, value: \.count),
+  primeModalReducer,
+  pullback(favoritePrimesReducer, value: \.favoritePrimesState)
+)
 
 // MARK: - ViewController
 
@@ -92,7 +134,7 @@ class ViewController: UITableViewController {
             )
         ) {
             state, action in
-            appReducer(value: &state.value, action: action)
+            appReducer(&state.value, action)
         }
 
     lazy var dataSource = UITableViewDiffableDataSource<Int, Row>(tableView: tableView) { _, _, itemIdentifier in
@@ -256,8 +298,15 @@ class FavoritePrimesViewController: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        /**
+         work around for console warning: Warning once only: UITableView was told to layout its visible cells and other contents without being in the view hierarchy?
+         https://stackoverflow.com/a/67848690
+         xcode 13.2.1, iOS 15.2
+         */
+        var first = false
         cancelable = store.publisher.sink(receiveValue: { state in
-            self.dataSource.apply(Self.makeSnapShot(state))
+            self.dataSource.apply(Self.makeSnapShot(state), animatingDifferences: first)
+            first = true
         })
     }
 
