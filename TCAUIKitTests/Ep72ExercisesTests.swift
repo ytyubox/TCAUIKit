@@ -15,7 +15,8 @@ final class Ep72ExercisesTests: XCTestCase {
             value.inner.value = Int(action) ?? 0
             value.inner.string = String(action)
         }
-        let stringStore = store.view(\.inner.string)
+        let stringStore = store.view(value: \.inner.string,
+                                     action: { $0 })
         stringStore.send("123")
         XCTAssertEqual(store.value.inner.string, "123")
         XCTAssertEqual(store.value.inner.value, 123)
@@ -36,7 +37,10 @@ final class Ep72ExercisesTests: XCTestCase {
             value.inner = .init(string: String(action),
                                 value: Int(action) ?? 0)
         }
-        let stringStore: Store<State<String>, String> = store.view { $0.pullback(\.inner.string) }
+        let stringStore: Store<State<String>, String> = store.view(
+            value: \.inner.string,
+            action: { $0 }
+        )
         var history: [String] = []
         let cancelable = stringStore.value.publisher.sink {
             history.append($0)
@@ -67,7 +71,10 @@ final class Ep72ExercisesTests: XCTestCase {
             value.inner = .init(string: String(action),
                                 value: Int(action) ?? 0)
         }
-        let stringStore: Store<State<String>, String> = store.view(\.inner.string)
+        let stringStore: Store<State<String>, String> = store.view(
+            value: \.inner.string,
+            action: { $0 }
+        )
         var history: [String] = []
         let cancelable = stringStore.value.publisher.sink {
             history.append($0)

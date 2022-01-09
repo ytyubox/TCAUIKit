@@ -1,3 +1,6 @@
+import Combine
+import ComposableArchitecture
+import UIKit
 public enum FavoritePrimesAction {
     case deleteFavoritePrimes(IndexSet)
 }
@@ -8,5 +11,61 @@ public func favoritePrimesReducer(state: inout [Int], action: FavoritePrimesActi
         for index in indexSet {
             state.remove(at: index)
         }
+    }
+}
+
+public class FavoritePrimesViewController: UITableViewController {
+    public var store: StateStore<[Int], FavoritePrimesAction> = .needInject
+    var cancelable: Cancellable?
+    lazy var dataSource = UITableViewDiffableDataSource<Int, Int>(tableView: tableView) { _, _, itemIdentifier in
+        let cell = UITableViewCell()
+        cell.textLabel?.text = itemIdentifier.description
+        return cell
+    }
+
+    override public func viewDidLoad() {
+        super.viewDidLoad()
+        title = "Favorite Primes"
+        tableView.dataSource = dataSource
+    }
+
+    override public func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        /**
+         work around for console warning: Warning once only: UITableView was told to layout its visible cells and other contents without being in the view hierarchy?
+         https://stackoverflow.com/a/67848690
+         xcode 13.2.1, iOS 15.2
+         */
+        var first = false
+        cancelable = store.publisher.sink(receiveValue: { state in
+            self.dataSource.apply(Self.makeSnapShot(state), animatingDifferences: first)
+            first = true
+        })
+    }
+
+    override public func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        cancelable?.cancel()
+    }
+
+    override public func tableView(_: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        UISwipeActionsConfiguration(
+            actions:
+            [
+                UIContextualAction(
+                    style: .destructive,
+                    title: "delete"
+                ) { [self] _, _, callback in
+                    self.store.send(.deleteFavoritePrimes(IndexSet(integer: indexPath.row)))
+                    callback(true)
+                },
+            ])
+    }
+
+    private static func makeSnapShot(_ state: [Int]) -> NSDiffableDataSourceSnapshot<Int, Int> {
+        var snapshot = NSDiffableDataSourceSnapshot<Int, Int>()
+        snapshot.appendSections([0])
+        snapshot.appendItems(state, toSection: 0)
+        return snapshot
     }
 }

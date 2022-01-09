@@ -5,49 +5,53 @@ public final class Store<Value, Action> {
     public var value: Value {
         storage.value
     }
+
     private var storage: Storage
     private enum Storage {
         case some(Value)
         case none
-        var value:Value {
+        var value: Value {
             get {
                 switch self {
-                    case .some(let value): return value
-                    case .none: fatalError()
+                case let .some(value): return value
+                case .none: fatalError()
                 }
             } set {
                 self = .some(newValue)
             }
         }
     }
+
     public init(initialValue: Value, reducer: @escaping (inout Value, Action) -> Void) {
         self.reducer = reducer
         storage = .some(initialValue)
     }
-    
+
     public func send(_ action: Action) {
         reducer(&storage.value, action)
     }
-    
+
     // MARK: - Helper
-    
+
     private init() {
         storage = .none
         reducer = { _, _ in }
     }
-    
+
     public static var needInject: Store<Value, Action> {
         self.init()
     }
 }
 
 public extension Store {
-    func view<LocalValue>(
-        _ f: @escaping (Value) -> LocalValue
-    ) -> Store<LocalValue, Action> {
-        Store<LocalValue, Action>(initialValue: f(value)) { localValue, action in
-            self.send(action)
-            localValue = f(self.value)
+    func view<LocalValue, LocalAction>(
+        value toLocalValue: @escaping (Value) -> LocalValue,
+        action toGlobalAction: @escaping (LocalAction) -> Action
+    ) -> Store<LocalValue, LocalAction> {
+        Store<LocalValue, LocalAction>(initialValue: toLocalValue(value)) {
+            localValue, localAction in
+            self.send(toGlobalAction(localAction))
+            localValue = toLocalValue(self.value)
         }
     }
 }

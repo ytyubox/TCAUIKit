@@ -1,4 +1,4 @@
-@testable import TCAUIKit
+import ComposableArchitecture
 import XCTest
 
 final class StateTests: XCTestCase {
@@ -8,7 +8,7 @@ final class StateTests: XCTestCase {
             var string: String = ""
         }
         var state = State.cold(Model())
-        var listState = state.pullback(\.string)
+        var listState = state.view(\.string)
         var history: [String] = []
         let cancelable = listState.publisher.sink { history.append($0) }
         listState.value += "1"
@@ -24,7 +24,7 @@ final class StateTests: XCTestCase {
             var string: String = ""
         }
         var state = State.hot(Model())
-        var listState = state.pullback(\.string)
+        var listState = state.view(\.string)
         var history: [String] = []
         let cancelable = listState.publisher.sink { history.append($0) }
         listState.value.append("1")
@@ -40,10 +40,8 @@ final class StateTests: XCTestCase {
             var string: String = ""
         }
         var state = State.cold(Model())
-        var listState = state.pullback {
-            $0.string
-        } setter: { $0.string = $1
-        }
+        var listState = state.viewing(
+            getter: { $0.string }) { $0.string = $1 }
 
         var history: [String] = []
         let cancelable = listState.publisher.sink { history.append($0) }
@@ -60,10 +58,11 @@ final class StateTests: XCTestCase {
             var string: String = ""
         }
         var state = State.hot(Model())
-        var listState = state.pullback {
-            $0.string
-        } setter: { $0.string = $1
-        }
+        var listState = state.viewing(
+            getter: { $0.string },
+            setter: { $0.string = $1 }
+        )
+
         var history: [String] = []
         let cancelable = listState.publisher.sink { history.append($0) }
         listState.value.append("1")
@@ -73,4 +72,3 @@ final class StateTests: XCTestCase {
         cancelable.cancel()
     }
 }
-

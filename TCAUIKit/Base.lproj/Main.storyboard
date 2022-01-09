@@ -30,7 +30,7 @@
         <!--Counter View Controller-->
         <scene sceneID="LGp-kM-IvZ">
             <objects>
-                <viewController storyboardIdentifier="CounterViewController" id="UMc-Iw-5zQ" customClass="CounterViewController" customModule="TCAUIKit" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CounterViewController" id="UMc-Iw-5zQ" customClass="CounterViewController" customModule="Counter" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="cRX-Wm-b7s">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -112,7 +112,7 @@
         <!--Is Prime Model View Controller-->
         <scene sceneID="tSA-rX-7x0">
             <objects>
-                <viewController storyboardIdentifier="IsPrimeModelViewController" id="MHi-gd-fHl" customClass="IsPrimeModelViewController" customModule="TCAUIKit" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="IsPrimeModelViewController" id="MHi-gd-fHl" customClass="IsPrimeModelViewController" customModule="PrimeModal" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vOH-CV-Lyg">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

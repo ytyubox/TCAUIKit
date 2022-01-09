@@ -7,12 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D208CF0D27834D14005F74EC /* Wolfram.swift in Sources */ = {isa = PBXBuildFile; fileRef = D208CF0C27834D14005F74EC /* Wolfram.swift */; };
 		D22277552789B81000AB2ADD /* Ep72ExercisesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D22277542789B81000AB2ADD /* Ep72ExercisesTests.swift */; };
-		D251431A27853C230096EC34 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = D251431927853C230096EC34 /* State.swift */; };
-		D251431C27853D110096EC34 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D251431B27853D110096EC34 /* Helper.swift */; };
 		D251431E278571980096EC34 /* Reducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D251431D278571980096EC34 /* Reducer.swift */; };
 		D27295F1278AD84B00EB0F8F /* Ep73ExercisesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27295F0278AD84B00EB0F8F /* Ep73ExercisesTests.swift */; };
+		D27295F2278AE44000EB0F8F /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = D251431927853C230096EC34 /* State.swift */; };
+		D27295F4278AE51700EB0F8F /* WolframAlpha.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27295F3278AE51700EB0F8F /* WolframAlpha.swift */; };
+		D27295F5278AE52E00EB0F8F /* Wolfram.swift in Sources */ = {isa = PBXBuildFile; fileRef = D208CF0C27834D14005F74EC /* Wolfram.swift */; };
+		D27295F6278AE58600EB0F8F /* PrimeModal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D282FF9E2789B2DF00E2C54C /* PrimeModal.framework */; };
+		D27295F7278AE58600EB0F8F /* PrimeModal.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D282FF9E2789B2DF00E2C54C /* PrimeModal.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D2729603278AE68B00EB0F8F /* UIKitHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = D2729602278AE68B00EB0F8F /* UIKitHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D2729607278AE69900EB0F8F /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D251431B27853D110096EC34 /* Helper.swift */; };
+		D2729608278AE6BD00EB0F8F /* UIKitHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2729600278AE68B00EB0F8F /* UIKitHelper.framework */; };
+		D2729609278AE6BD00EB0F8F /* UIKitHelper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D2729600278AE68B00EB0F8F /* UIKitHelper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D272960D278AECD300EB0F8F /* Ep74ExercisesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D272960C278AECD300EB0F8F /* Ep74ExercisesTests.swift */; };
+		D272960F278AEE1F00EB0F8F /* ExerciseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D272960E278AEE1F00EB0F8F /* ExerciseHelper.swift */; };
 		D282FF1C278965B900E2C54C /* TCAUIKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D282FF1B278965B900E2C54C /* TCAUIKitTests.swift */; };
 		D282FF23278965CC00E2C54C /* Ep68ExercisesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D282FF22278965CC00E2C54C /* Ep68ExercisesTests.swift */; };
 		D282FF252789740400E2C54C /* Ep69ExercisesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D282FF242789740400E2C54C /* Ep69ExercisesTests.swift */; };
@@ -53,6 +61,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		D27295F8278AE58600EB0F8F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2B7B3AB2782E690003C9660 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D282FF9D2789B2DF00E2C54C;
+			remoteInfo = PrimeModal;
+		};
+		D272960A278AE6BD00EB0F8F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2B7B3AB2782E690003C9660 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D27295FF278AE68B00EB0F8F;
+			remoteInfo = UIKitHelper;
+		};
 		D282FF1D278965B900E2C54C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D2B7B3AB2782E690003C9660 /* Project object */;
@@ -147,6 +169,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		D27295FA278AE58600EB0F8F /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				D27295F7278AE58600EB0F8F /* PrimeModal.framework in Embed Frameworks */,
+				D2729609278AE6BD00EB0F8F /* UIKitHelper.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D282FF462789B05D00E2C54C /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -170,6 +204,11 @@
 		D251431B27853D110096EC34 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		D251431D278571980096EC34 /* Reducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reducer.swift; sourceTree = "<group>"; };
 		D27295F0278AD84B00EB0F8F /* Ep73ExercisesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ep73ExercisesTests.swift; sourceTree = "<group>"; };
+		D27295F3278AE51700EB0F8F /* WolframAlpha.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WolframAlpha.swift; sourceTree = "<group>"; };
+		D2729600278AE68B00EB0F8F /* UIKitHelper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UIKitHelper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2729602278AE68B00EB0F8F /* UIKitHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UIKitHelper.h; sourceTree = "<group>"; };
+		D272960C278AECD300EB0F8F /* Ep74ExercisesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ep74ExercisesTests.swift; sourceTree = "<group>"; };
+		D272960E278AEE1F00EB0F8F /* ExerciseHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseHelper.swift; sourceTree = "<group>"; };
 		D282FF142789648C00E2C54C /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = MyPlayground.playground; path = TCAUIKit/MyPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		D282FF19278965B900E2C54C /* TCAUIKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TCAUIKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D282FF1B278965B900E2C54C /* TCAUIKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCAUIKitTests.swift; sourceTree = "<group>"; };
@@ -210,6 +249,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		D27295FD278AE68B00EB0F8F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D282FF16278965B900E2C54C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -236,6 +282,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D27295F6278AE58600EB0F8F /* PrimeModal.framework in Frameworks */,
+				D2729608278AE6BD00EB0F8F /* UIKitHelper.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,6 +339,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D2729601278AE68B00EB0F8F /* UIKitHelper */ = {
+			isa = PBXGroup;
+			children = (
+				D251431B27853D110096EC34 /* Helper.swift */,
+				D2729602278AE68B00EB0F8F /* UIKitHelper.h */,
+			);
+			path = UIKitHelper;
+			sourceTree = "<group>";
+		};
 		D282FF1A278965B900E2C54C /* TCAUIKitTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -301,6 +358,8 @@
 				D282FF2A278994ED00E2C54C /* Ep71ExercisesTests.swift */,
 				D22277542789B81000AB2ADD /* Ep72ExercisesTests.swift */,
 				D27295F0278AD84B00EB0F8F /* Ep73ExercisesTests.swift */,
+				D272960C278AECD300EB0F8F /* Ep74ExercisesTests.swift */,
+				D272960E278AEE1F00EB0F8F /* ExerciseHelper.swift */,
 			);
 			path = TCAUIKitTests;
 			sourceTree = "<group>";
@@ -310,6 +369,7 @@
 			children = (
 				D282FF332789B05D00E2C54C /* ComposableArchitecture.h */,
 				D282FF4D2789B08700E2C54C /* ComposableArchitechure.swift */,
+				D251431927853C230096EC34 /* State.swift */,
 			);
 			path = ComposableArchitecture;
 			sourceTree = "<group>";
@@ -327,6 +387,8 @@
 			children = (
 				D282FF562789B17C00E2C54C /* Counter.h */,
 				D282FF752789B19800E2C54C /* Counter.swift */,
+				D27295F3278AE51700EB0F8F /* WolframAlpha.swift */,
+				D208CF0C27834D14005F74EC /* Wolfram.swift */,
 			);
 			path = Counter;
 			sourceTree = "<group>";
@@ -400,6 +462,7 @@
 				D282FF612789B17C00E2C54C /* CounterTests */,
 				D282FF7D2789B1E900E2C54C /* FavoritePrimes */,
 				D282FF892789B1EA00E2C54C /* FavoritePrimesTests */,
+				D2729601278AE68B00EB0F8F /* UIKitHelper */,
 				D282FF6F2789B18300E2C54C /* Frameworks */,
 				D282FF142789648C00E2C54C /* MyPlayground.playground */,
 				D282FF9F2789B2DF00E2C54C /* PrimeModal */,
@@ -421,6 +484,7 @@
 				D282FF832789B1EA00E2C54C /* FavoritePrimesTests.xctest */,
 				D282FF9E2789B2DF00E2C54C /* PrimeModal.framework */,
 				D282FFA52789B2DF00E2C54C /* PrimeModalTests.xctest */,
+				D2729600278AE68B00EB0F8F /* UIKitHelper.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -430,16 +494,13 @@
 			children = (
 				D2B7B3B62782E690003C9660 /* AppDelegate.swift */,
 				D2B7B3BF2782E691003C9660 /* Assets.xcassets */,
-				D251431B27853D110096EC34 /* Helper.swift */,
 				D2B7B3C42782E691003C9660 /* Info.plist */,
 				D2B7B3C12782E691003C9660 /* LaunchScreen.storyboard */,
 				D2B7B3BC2782E690003C9660 /* Main.storyboard */,
 				D251431D278571980096EC34 /* Reducer.swift */,
 				D2B7B3B82782E690003C9660 /* SceneDelegate.swift */,
-				D251431927853C230096EC34 /* State.swift */,
 				D2B7B3BA2782E690003C9660 /* ViewController.swift */,
 				D282FF2827898F8300E2C54C /* AppState+Action.swift */,
-				D208CF0C27834D14005F74EC /* Wolfram.swift */,
 			);
 			path = TCAUIKit;
 			sourceTree = "<group>";
@@ -447,6 +508,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		D27295FB278AE68B00EB0F8F /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2729603278AE68B00EB0F8F /* UIKitHelper.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D282FF2C2789B05D00E2C54C /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -482,6 +551,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		D27295FF278AE68B00EB0F8F /* UIKitHelper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D2729604278AE68B00EB0F8F /* Build configuration list for PBXNativeTarget "UIKitHelper" */;
+			buildPhases = (
+				D27295FB278AE68B00EB0F8F /* Headers */,
+				D27295FC278AE68B00EB0F8F /* Sources */,
+				D27295FD278AE68B00EB0F8F /* Frameworks */,
+				D27295FE278AE68B00EB0F8F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = UIKitHelper;
+			productName = UIKitHelper;
+			productReference = D2729600278AE68B00EB0F8F /* UIKitHelper.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		D282FF18278965B900E2C54C /* TCAUIKitTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D282FF1F278965B900E2C54C /* Build configuration list for PBXNativeTarget "TCAUIKitTests" */;
@@ -545,10 +632,13 @@
 				D282FF502789B17C00E2C54C /* Sources */,
 				D282FF512789B17C00E2C54C /* Frameworks */,
 				D282FF522789B17C00E2C54C /* Resources */,
+				D27295FA278AE58600EB0F8F /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				D27295F9278AE58600EB0F8F /* PBXTargetDependency */,
+				D272960B278AE6BD00EB0F8F /* PBXTargetDependency */,
 			);
 			name = Counter;
 			productName = Counter;
@@ -680,6 +770,9 @@
 				LastSwiftUpdateCheck = 1320;
 				LastUpgradeCheck = 1320;
 				TargetAttributes = {
+					D27295FF278AE68B00EB0F8F = {
+						CreatedOnToolsVersion = 13.2.1;
+					};
 					D282FF18278965B900E2C54C = {
 						CreatedOnToolsVersion = 13.2.1;
 						TestTargetID = D2B7B3B22782E690003C9660;
@@ -740,11 +833,19 @@
 				D282FF822789B1EA00E2C54C /* FavoritePrimesTests */,
 				D282FF9D2789B2DF00E2C54C /* PrimeModal */,
 				D282FFA42789B2DF00E2C54C /* PrimeModalTests */,
+				D27295FF278AE68B00EB0F8F /* UIKitHelper */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		D27295FE278AE68B00EB0F8F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D282FF17278965B900E2C54C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -821,6 +922,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		D27295FC278AE68B00EB0F8F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2729607278AE69900EB0F8F /* Helper.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D282FF15278965B900E2C54C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -832,6 +941,8 @@
 				D282FF2727898BFA00E2C54C /* Ep70ExercisesTests.swift in Sources */,
 				D282FF23278965CC00E2C54C /* Ep68ExercisesTests.swift in Sources */,
 				D282FF252789740400E2C54C /* Ep69ExercisesTests.swift in Sources */,
+				D272960F278AEE1F00EB0F8F /* ExerciseHelper.swift in Sources */,
+				D272960D278AECD300EB0F8F /* Ep74ExercisesTests.swift in Sources */,
 				D282FF2B278994ED00E2C54C /* Ep71ExercisesTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -841,6 +952,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D282FF4E2789B08700E2C54C /* ComposableArchitechure.swift in Sources */,
+				D27295F2278AE44000EB0F8F /* State.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -856,6 +968,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D27295F5278AE52E00EB0F8F /* Wolfram.swift in Sources */,
+				D27295F4278AE51700EB0F8F /* WolframAlpha.swift in Sources */,
 				D282FF762789B19800E2C54C /* Counter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -907,17 +1021,24 @@
 				D2B7B3BB2782E690003C9660 /* ViewController.swift in Sources */,
 				D251431E278571980096EC34 /* Reducer.swift in Sources */,
 				D282FF2927898F8300E2C54C /* AppState+Action.swift in Sources */,
-				D251431C27853D110096EC34 /* Helper.swift in Sources */,
-				D208CF0D27834D14005F74EC /* Wolfram.swift in Sources */,
 				D2B7B3B72782E690003C9660 /* AppDelegate.swift in Sources */,
 				D2B7B3B92782E690003C9660 /* SceneDelegate.swift in Sources */,
-				D251431A27853C230096EC34 /* State.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		D27295F9278AE58600EB0F8F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D282FF9D2789B2DF00E2C54C /* PrimeModal */;
+			targetProxy = D27295F8278AE58600EB0F8F /* PBXContainerItemProxy */;
+		};
+		D272960B278AE6BD00EB0F8F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D27295FF278AE68B00EB0F8F /* UIKitHelper */;
+			targetProxy = D272960A278AE6BD00EB0F8F /* PBXContainerItemProxy */;
+		};
 		D282FF1E278965B900E2C54C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = D2B7B3B22782E690003C9660 /* TCAUIKit */;
@@ -1005,6 +1126,66 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		D2729605278AE68B00EB0F8F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 3AMPL46LPV;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.inkinyu.UIKitHelper;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		D2729606278AE68B00EB0F8F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 3AMPL46LPV;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.inkinyu.UIKitHelper;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		D282FF20278965B900E2C54C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1168,7 +1349,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.inkinyu.Counter;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1203,7 +1384,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.inkinyu.Counter;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -1271,7 +1452,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.inkinyu.FavoritePrimes;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1306,7 +1487,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.inkinyu.FavoritePrimes;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -1374,7 +1555,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.inkinyu.PrimeModal;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1409,7 +1590,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.inkinyu.PrimeModal;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -1630,6 +1811,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		D2729604278AE68B00EB0F8F /* Build configuration list for PBXNativeTarget "UIKitHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D2729605278AE68B00EB0F8F /* Debug */,
+				D2729606278AE68B00EB0F8F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		D282FF1F278965B900E2C54C /* Build configuration list for PBXNativeTarget "TCAUIKitTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

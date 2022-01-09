@@ -1,27 +1,27 @@
 import Combine
-import ComposableArchitecture
-import UIKit
-protocol Publishing {
+
+public protocol Publishing {
     associatedtype Value
 
     var publisher: AnyPublisher<Value, Never> { get }
 }
 
 extension Store: Publishing where Value: Publishing {
-    var publisher: AnyPublisher<Value.Value, Never> {
+    public var publisher: AnyPublisher<Value.Value, Never> {
         value.publisher
     }
 }
 
 // MARK: - State
 
+public typealias StateStore<Value, Action> = Store<State<Value>, Action>
 @dynamicMemberLookup
-struct State<Value>: Publishing {
+public struct State<Value>: Publishing {
     private let getter: () -> Value
     private let setter: (Value) -> Void
-    let publisher: AnyPublisher<Value, Never>
+    public let publisher: AnyPublisher<Value, Never>
 
-    var value: Value {
+    public var value: Value {
         get { getter() }
         set { setter(newValue) }
     }
@@ -56,7 +56,7 @@ struct State<Value>: Publishing {
 
     // MARK: - Dynamic Member Lookup
 
-    subscript<T>(dynamicMember keyPath: WritableKeyPath<Value, T>) -> T {
+    public subscript<T>(dynamicMember keyPath: WritableKeyPath<Value, T>) -> T {
         get { getter()[keyPath: keyPath] }
         set {
             var copy = getter()
@@ -67,17 +67,14 @@ struct State<Value>: Publishing {
 
     // MARK: - Pull back
 
-    func pullback<TargetValue>(
+    public func view<TargetValue>(
         _ target: WritableKeyPath<Value, TargetValue>
     ) -> State<TargetValue> {
-        self.pullback {
-            $0[keyPath: target]
-        } setter: {
-            $0[keyPath: target] = $1
-        }
+        self.viewing(getter: { $0[keyPath: target] },
+                     setter: { $0[keyPath: target] = $1 })
     }
 
-    func pullback<TargetValue>(
+    public func viewing<TargetValue>(
         getter targetGetter: @escaping (Value) -> TargetValue,
         setter targetSetter: @escaping (inout Value, TargetValue) -> Void
     ) -> State<TargetValue> {
@@ -92,20 +89,27 @@ struct State<Value>: Publishing {
     }
 }
 
-extension Store {
-    func view<Inner, Target>(_ target: WritableKeyPath<Inner, Target>) -> Store<State<Target>, Action>
-    where Value == State<Inner>
+public extension Store {
+    func view<InnerValue, LocalValue, LocalAction>(
+        value localValue: WritableKeyPath<InnerValue, LocalValue>,
+        action toGlobalAction: @escaping (LocalAction) -> Action
+    ) -> Store<State<LocalValue>, LocalAction>
+        where Value == State<InnerValue>
     {
-        view {
-            $0.pullback(target)
-        }
+        view(value: { inner in
+            inner[keyPath: localValue]
+        }, action: toGlobalAction)
     }
-    func view<Inner, Target>(_ f:@escaping (Inner) -> Target) -> Store<State<Target>, Action>
-    where Value == State<Inner>
+
+    func view<InnerValue, LocalValue, LocalAction>(
+        value localValue: @escaping (InnerValue) -> LocalValue,
+        action toGlobalAction: @escaping (LocalAction) -> Action
+    ) -> Store<State<LocalValue>, LocalAction>
+
+        where Value == State<InnerValue>
     {
-        view {
-            $0.pullback(getter: f, setter: {_,_ in })
-        }
+        view(value: { $0.viewing(getter: localValue,
+                                 setter: { _, _ in }) },
+             action: { toGlobalAction($0) })
     }
 }
-
