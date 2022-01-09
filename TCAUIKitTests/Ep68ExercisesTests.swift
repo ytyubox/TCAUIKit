@@ -82,23 +82,17 @@ final class Ep68ExercisesTests: XCTestCase {
     func testQ4() throws {
         func counterReducer(value: inout AppState, action: AppAction) {
             switch action {
-            case let .counter(counterAction):
-                switch counterAction {
-                case .decrTapped: value.count -= 1
-                case .incrTapped: value.count += 1
-                }
+            case .counterView(.counter(.decrTapped)): value.count -= 1
+            case .counterView(.counter(.incrTapped)): value.count += 1
             default: break
             }
         }
         func primeModalReducer(value: inout AppState, action: AppAction) {
             switch action {
-            case let .primeModal(primeModalAction):
-                switch primeModalAction {
-                case .saveFavoritePrimeTapped:
-                    value.favoritePrimes.append(value.count)
-                case .removeFavoritePrimeTapped:
-                    value.favoritePrimes.removeAll { $0 == value.count }
-                }
+            case .counterView(.primeModal(.saveFavoritePrimeTapped)):
+                value.favoritePrimes.append(value.count)
+            case .counterView(.primeModal(.removeFavoritePrimeTapped)):
+                value.favoritePrimes.removeAll { $0 == value.count }
             default: break
             }
         }
@@ -121,11 +115,11 @@ final class Ep68ExercisesTests: XCTestCase {
              primeModalReducer(value:action:),
              FavoritePrimeReducer(value:action:)]
         )
-        appReducer(&state, .counter(.incrTapped))
+        appReducer(&state, .counterView(.counter(.incrTapped)))
         XCTAssertEqual(state.count, 1)
-        appReducer(&state, .counter(.decrTapped))
+        appReducer(&state, .counterView(.counter(.decrTapped)))
         XCTAssertEqual(state.count, 0)
-        appReducer(&state, .primeModal(.saveFavoritePrimeTapped))
+        appReducer(&state, .counterView(.primeModal(.saveFavoritePrimeTapped)))
         XCTAssertEqual(state.favoritePrimes, [0])
         appReducer(&state, .favoritePrimes(.deleteFavoritePrimes([0])))
         XCTAssertEqual(state.favoritePrimes, [])
@@ -144,20 +138,15 @@ final class Ep68ExercisesTests: XCTestCase {
         var state = AppState()
         let reducer = transform { count, action in
             switch action {
-            case let .counter(counterAction):
-                switch counterAction {
-                case .decrTapped:
-                    count -= 1
-                case .incrTapped:
-                    count += 1
-                }
+            case .counterView(.counter(.decrTapped)): count -= 1
+            case .counterView(.counter(.incrTapped)): count += 1
             default: break
             }
         }
 
-        reducer(&state, .counter(.incrTapped))
+        reducer(&state, .counterView(.counter(.incrTapped)))
         XCTAssertEqual(state.count, 1)
-        reducer(&state, .counter(.decrTapped))
+        reducer(&state, .counterView(.counter(.decrTapped)))
         XCTAssertEqual(state.count, 0)
     }
 
@@ -176,20 +165,15 @@ final class Ep68ExercisesTests: XCTestCase {
         var state = AppState()
         let reducer = transform(count: \.count) { count, action in
             switch action {
-            case let .counter(counterAction):
-                switch counterAction {
-                case .decrTapped:
-                    count -= 1
-                case .incrTapped:
-                    count += 1
-                }
+            case .counterView(.counter(.decrTapped)): count -= 1
+            case .counterView(.counter(.incrTapped)): count += 1
             default: break
             }
         }
 
-        reducer(&state, .counter(.incrTapped))
+        reducer(&state, .counterView(.counter(.incrTapped)))
         XCTAssertEqual(state.count, 1)
-        reducer(&state, .counter(.decrTapped))
+        reducer(&state, .counterView(.counter(.decrTapped)))
         XCTAssertEqual(state.count, 0)
     }
 }

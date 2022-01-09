@@ -11,7 +11,6 @@ import Combine
 import ComposableArchitecture
 import Counter
 import FavoritePrimes
-import PrimeModal
 import UIKit
 
 // MARK: - ViewController
@@ -52,12 +51,7 @@ class ViewController: UITableViewController {
             let vc = CounterViewController.make(from: .main, id: "CounterViewController")
             vc.store = self.store.view(
                 value: { ($0.count, $0.favoritePrimes) },
-                action: {
-                    switch $0 {
-                    case let .primeModal(action): return .primeModal(action)
-                    case let .counter(action): return .counter(action)
-                    }
-                }
+                action: { .counterView($0) }
             )
             return vc
         },

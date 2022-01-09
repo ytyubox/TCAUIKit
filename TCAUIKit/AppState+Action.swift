@@ -2,7 +2,6 @@ import ComposableArchitecture
 import Counter
 import FavoritePrimes
 import Foundation
-import PrimeModal
 struct AppState {
     var count = 0
     var favoritePrimes: [Int] = []
@@ -27,48 +26,29 @@ struct AppState {
 }
 
 enum AppAction {
-    case counter(CounterAction)
-    case primeModal(PrimeModalAction)
+    case counterView(CounterViewAction)
     case favoritePrimes(FavoritePrimesAction)
 
-    var counter: CounterAction? {
-        get {
-            guard case let .counter(value) = self else { return nil }
-            return value
-        }
-        set {
-            guard case .counter = self, let newValue = newValue else { return }
-            self = .counter(newValue)
-        }
-    }
-
-    var primeModal: PrimeModalAction? {
-        get {
-            guard case let .primeModal(value) = self else { return nil }
-            return value
-        }
-        set {
-            guard case .primeModal = self, let newValue = newValue else { return }
-            self = .primeModal(newValue)
-        }
+    var counterView: CounterViewAction? {
+        guard case let .counterView(value) = self else { return nil }
+        return value
     }
 
     var favoritePrimes: FavoritePrimesAction? {
-        get {
-            guard case let .favoritePrimes(value) = self else { return nil }
-            return value
-        }
-        set {
-            guard case .favoritePrimes = self, let newValue = newValue else { return }
-            self = .favoritePrimes(newValue)
-        }
+        guard case let .favoritePrimes(value) = self else { return nil }
+        return value
     }
 }
 
+let appReducer: (inout AppState, AppAction) -> Void = combine(
+    pullback(counterViewReducer, value: \.counterView, action: \.counterView),
+
+    pullback(favoritePrimesReducer, value: \.favoritePrimes, action: \.favoritePrimes)
+)
 extension AppState {
-    var primeModal: PrimeModalState {
+    var counterView: CounterViewState {
         get {
-            PrimeModalState(
+            CounterViewState(
                 count: count,
                 favoritePrimes: favoritePrimes
             )
@@ -80,23 +60,17 @@ extension AppState {
     }
 }
 
-let appReducer: (inout AppState, AppAction) -> Void = combine(
-    pullback(counterReducer, value: \.count, action: \.counter),
-    pullback(primeModalReducer, value: \.primeModal, action: \.primeModal),
-    pullback(favoritePrimesReducer, value: \.favoritePrimes, action: \.favoritePrimes)
-)
-
 func activityFeed(
     _ reducer: @escaping (inout AppState, AppAction) -> Void
 ) -> (inout AppState, AppAction) -> Void {
     return { state, action in
         switch action {
-        case .counter:
+        case .counterView(.counter):
             break
-        case .primeModal(.removeFavoritePrimeTapped):
+        case .counterView(.primeModal(.removeFavoritePrimeTapped)):
             state.activityFeed.append(.init(timestamp: Date(), type: .removedFavoritePrime(state.count)))
 
-        case .primeModal(.saveFavoritePrimeTapped):
+        case .counterView(.primeModal(.saveFavoritePrimeTapped)):
             state.activityFeed.append(.init(timestamp: Date(), type: .addedFavoritePrime(state.count)))
 
         case let .favoritePrimes(.deleteFavoritePrimes(indexSet)):

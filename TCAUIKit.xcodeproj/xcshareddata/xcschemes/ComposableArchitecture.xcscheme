@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D282FF302789B05D00E2C54C"
+               BlueprintIdentifier = "D2729624278AF5D300EB0F8F"
                BuildableName = "ComposableArchitecture.framework"
                BlueprintName = "ComposableArchitecture"
                ReferencedContainer = "container:TCAUIKit.xcodeproj">
@@ -26,45 +26,16 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      codeCoverageEnabled = "YES">
       <Testables>
          <TestableReference
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D282FF372789B05D00E2C54C"
+               BlueprintIdentifier = "D272962B278AF5D300EB0F8F"
                BuildableName = "ComposableArchitectureTests.xctest"
                BlueprintName = "ComposableArchitectureTests"
-               ReferencedContainer = "container:TCAUIKit.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D282FF5A2789B17C00E2C54C"
-               BuildableName = "CounterTests.xctest"
-               BlueprintName = "CounterTests"
-               ReferencedContainer = "container:TCAUIKit.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D282FF822789B1EA00E2C54C"
-               BuildableName = "FavoritePrimesTests.xctest"
-               BlueprintName = "FavoritePrimesTests"
-               ReferencedContainer = "container:TCAUIKit.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D282FFA42789B2DF00E2C54C"
-               BuildableName = "PrimeModalTests.xctest"
-               BlueprintName = "PrimeModalTests"
                ReferencedContainer = "container:TCAUIKit.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -90,7 +61,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "D282FF302789B05D00E2C54C"
+            BlueprintIdentifier = "D2729624278AF5D300EB0F8F"
             BuildableName = "ComposableArchitecture.framework"
             BlueprintName = "ComposableArchitecture"
             ReferencedContainer = "container:TCAUIKit.xcodeproj">

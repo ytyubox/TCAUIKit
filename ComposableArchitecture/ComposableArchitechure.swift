@@ -1,13 +1,18 @@
 import Foundation
 
-public final class Store<Value, Action> {
+public class Store<Value, Action> {
     private let reducer: (inout Value, Action) -> Void
     public var value: Value {
-        storage.value
+        get {
+            storage.value
+        }
+        set {
+            storage = .some(newValue)
+        }
     }
 
-    private var storage: Storage
-    private enum Storage {
+    internal var storage: Storage
+    internal enum Storage {
         case some(Value)
         case none
         var value: Value {
@@ -39,12 +44,10 @@ public final class Store<Value, Action> {
     }
 
     public static var needInject: Store<Value, Action> {
-        self.init()
+        Store()
     }
-}
 
-public extension Store {
-    func view<LocalValue, LocalAction>(
+    public func view<LocalValue, LocalAction>(
         value toLocalValue: @escaping (Value) -> LocalValue,
         action toGlobalAction: @escaping (LocalAction) -> Action
     ) -> Store<LocalValue, LocalAction> {

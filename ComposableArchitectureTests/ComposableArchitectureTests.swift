@@ -7,7 +7,22 @@
  *		Running on macOS 12.1
  */
 
-@testable import ComposableArchitecture
+import ComposableArchitecture
 import XCTest
 
-class ComposableArchitectureTests: XCTestCase {}
+class ComposableArchitectureTests: XCTestCase {
+    func testSwiftUIBasedStore() throws {
+        struct Target {
+            var count = 0
+            var string = ""
+        }
+        let store = ObservableStore<Target, String>(initialValue: Target()) {
+            ($0.count, $0.string) = (Int($1) ?? 0, $1)
+        }
+
+        let countStore = store.view(value: \.count, action: { $0 })
+        countStore.send("1")
+        XCTAssertEqual(store.value.count, 1)
+        XCTAssertEqual(countStore.value, 1)
+    }
+}

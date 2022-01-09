@@ -7,7 +7,7 @@
  *		Running on macOS 12.1
  */
 
-@testable import PrimeModal
+import PrimeModal
 import XCTest
 
 class PrimeModalTests: XCTestCase {}

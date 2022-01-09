@@ -24,8 +24,21 @@ public typealias CounterViewState = (count: Int, favoritePrimes: [Int])
 public enum CounterViewAction {
     case counter(CounterAction)
     case primeModal(PrimeModalAction)
+    public var counter: CounterAction? {
+        guard case let .counter(value) = self else { return nil }
+        return value
+    }
+
+    public var primeModal: PrimeModalAction? {
+        guard case let .primeModal(value) = self else { return nil }
+        return value
+    }
 }
 
+public let counterViewReducer: (inout CounterViewState, CounterViewAction) -> Void = combine(
+    pullback(counterReducer, value: \.count, action: \.counter),
+    pullback(primeModalReducer, value: \.self, action: \.primeModal)
+)
 public class CounterViewController: UIViewController {
     public var store: StateStore<CounterViewState, CounterViewAction> = .needInject
     @IBOutlet private var label: UILabel!
