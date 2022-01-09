@@ -30,13 +30,13 @@ final class Ep72ExercisesTests: XCTestCase {
             }
         }
         let store: Store<State<TestTarget>, String> = Store(
-            initialValue: State(TestTarget())
+            initialValue: .hot(TestTarget())
         ) { value, action in
 
             value.inner = .init(string: String(action),
                                 value: Int(action) ?? 0)
         }
-        let stringStore: Store<State<String>, String> = store.view { $0.map(\.inner.string) }
+        let stringStore: Store<State<String>, String> = store.view { $0.pullback(\.inner.string) }
         var history: [String] = []
         let cancelable = stringStore.value.publisher.sink {
             history.append($0)
@@ -61,7 +61,7 @@ final class Ep72ExercisesTests: XCTestCase {
             }
         }
         let store: Store<State<TestTarget>, String> = Store(
-            initialValue: State(TestTarget())
+            initialValue: .hot(TestTarget())
         ) { value, action in
 
             value.inner = .init(string: String(action),

@@ -17,7 +17,7 @@ typealias AppStore = Store<State<AppState>, AppAction>
 class ViewController: UITableViewController {
     let store: AppStore =
         Store(initialValue:
-            State(
+            .hot(
                 AppState(count: 0, favoritePrimes: [])
             )
         ) {

@@ -42,6 +42,7 @@
 		D282FFB12789B2DF00E2C54C /* PrimeModal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D282FF9E2789B2DF00E2C54C /* PrimeModal.framework */; };
 		D282FFB22789B2DF00E2C54C /* PrimeModal.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D282FF9E2789B2DF00E2C54C /* PrimeModal.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D282FFBA2789B2EF00E2C54C /* PrimeModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = D282FFB92789B2EF00E2C54C /* PrimeModal.swift */; };
+		D29178E0278A7F2300C2B90E /* StateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D29178DF278A7F2300C2B90E /* StateTests.swift */; };
 		D2B7B3B72782E690003C9660 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B7B3B62782E690003C9660 /* AppDelegate.swift */; };
 		D2B7B3B92782E690003C9660 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B7B3B82782E690003C9660 /* SceneDelegate.swift */; };
 		D2B7B3BB2782E690003C9660 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B7B3BA2782E690003C9660 /* ViewController.swift */; };
@@ -196,6 +197,7 @@
 		D282FFA52789B2DF00E2C54C /* PrimeModalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PrimeModalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D282FFAC2789B2DF00E2C54C /* PrimeModalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimeModalTests.swift; sourceTree = "<group>"; };
 		D282FFB92789B2EF00E2C54C /* PrimeModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimeModal.swift; sourceTree = "<group>"; };
+		D29178DF278A7F2300C2B90E /* StateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateTests.swift; sourceTree = "<group>"; };
 		D2B7B3B32782E690003C9660 /* TCAUIKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TCAUIKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2B7B3B62782E690003C9660 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D2B7B3B82782E690003C9660 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -292,7 +294,7 @@
 		D282FF1A278965B900E2C54C /* TCAUIKitTests */ = {
 			isa = PBXGroup;
 			children = (
-				D282FF1B278965B900E2C54C /* TCAUIKitTests.swift */,
+				D29178E1278A7FAB00C2B90E /* TCAUIKitTests */,
 				D282FF22278965CC00E2C54C /* Ep68ExercisesTests.swift */,
 				D282FF242789740400E2C54C /* Ep69ExercisesTests.swift */,
 				D282FF2627898BFA00E2C54C /* Ep70ExercisesTests.swift */,
@@ -375,6 +377,15 @@
 				D282FFAC2789B2DF00E2C54C /* PrimeModalTests.swift */,
 			);
 			path = PrimeModalTests;
+			sourceTree = "<group>";
+		};
+		D29178E1278A7FAB00C2B90E /* TCAUIKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				D282FF1B278965B900E2C54C /* TCAUIKitTests.swift */,
+				D29178DF278A7F2300C2B90E /* StateTests.swift */,
+			);
+			path = TCAUIKitTests;
 			sourceTree = "<group>";
 		};
 		D2B7B3AA2782E690003C9660 = {
@@ -815,6 +826,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D282FF1C278965B900E2C54C /* TCAUIKitTests.swift in Sources */,
+				D29178E0278A7F2300C2B90E /* StateTests.swift in Sources */,
 				D22277552789B81000AB2ADD /* Ep72ExercisesTests.swift in Sources */,
 				D282FF2727898BFA00E2C54C /* Ep70ExercisesTests.swift in Sources */,
 				D282FF23278965CC00E2C54C /* Ep68ExercisesTests.swift in Sources */,

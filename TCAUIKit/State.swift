@@ -1,24 +1,36 @@
 import Combine
 import ComposableArchitecture
+import UIKit
 
 // MARK: - State
 
 @dynamicMemberLookup
-struct State<Value> {
+struct State<Value>: Publishing {
     private let getter: () -> Value
     private let setter: (Value) -> Void
-    private let _publisher: AnyPublisher<Value, Never>
+    let publisher: AnyPublisher<Value, Never>
 
     var value: Value {
         get { getter() }
         set { setter(newValue) }
     }
 
-    internal init(_ value: Value) {
-        let currentValueSubject = CurrentValueSubject<Value, Never>(value)
-        self.getter = { currentValueSubject.value }
-        self.setter = { currentValueSubject.value = $0 }
-        self._publisher = currentValueSubject.eraseToAnyPublisher()
+    // MARK: - Factory method
+
+    public static func cold(_ value: Value) -> State<Value> {
+        var value = value
+        let subject = PassthroughSubject<Value, Never>()
+        return State(publisher: subject.eraseToAnyPublisher()) { value
+        } setter: {
+            value = $0
+            subject.send(value)
+        }
+    }
+
+    public static func hot(_ value: Value) -> State<Value> {
+        let subject = CurrentValueSubject<Value, Never>(value)
+        return State(publisher: subject.eraseToAnyPublisher()) { subject.value
+        } setter: { subject.value = $0 }
     }
 
     fileprivate init(
@@ -28,8 +40,10 @@ struct State<Value> {
     ) {
         self.getter = getter
         self.setter = setter
-        self._publisher = publisher
+        self.publisher = publisher
     }
+
+    // MARK: - Dynamic Member Lookup
 
     subscript<T>(dynamicMember keyPath: WritableKeyPath<Value, T>) -> T {
         get { getter()[keyPath: keyPath] }
@@ -40,24 +54,25 @@ struct State<Value> {
         }
     }
 
-    func map<TargetValue>(
-        _ targetValue: WritableKeyPath<Value, TargetValue>
+    // MARK: - Pull back
+
+    func pullback<TargetValue>(
+        _ target: WritableKeyPath<Value, TargetValue>
     ) -> State<TargetValue> {
-        State<TargetValue>(publisher: _publisher.map(targetValue).eraseToAnyPublisher()) {
-            return getter()[keyPath: targetValue]
-        } setter: { (newValue: TargetValue) in
-            var value = getter()
-            value[keyPath: targetValue] = newValue
-            setter(value)
+        self.pullback {
+            $0[keyPath: target]
+        } setter: {
+            $0[keyPath: target] = $1
         }
     }
 
-    func map<TargetValue>(
+    func pullback<TargetValue>(
         getter targetGetter: @escaping (Value) -> TargetValue,
         setter targetSetter: @escaping (inout Value, TargetValue) -> Void
     ) -> State<TargetValue> {
-        State<TargetValue>(publisher: _publisher.map(targetGetter).eraseToAnyPublisher()) {
-            return targetGetter(value)
+        State<TargetValue>(publisher: publisher.map(targetGetter)
+            .eraseToAnyPublisher()) {
+                return targetGetter(value)
         } setter: { (newValue: TargetValue) in
             var value = getter()
             targetSetter(&value, newValue)
@@ -66,22 +81,12 @@ struct State<Value> {
     }
 }
 
-extension State: Publishing {
-    var publisher: AnyPublisher<Value, Never> {
-        _publisher
-    }
-}
-
-func viewing<Value, Action, Target>(store: Store<State<Value>, Action>,
-                                    target: WritableKeyPath<Value, Target>) -> Store<State<Target>, Action>
-{
-    store.view { $0.map(target) }
-}
-
 extension Store {
     func view<Inner, Target>(_ target: WritableKeyPath<Inner, Target>) -> Store<State<Target>, Action>
         where Value == State<Inner>
     {
-        view { $0.map(target) }
+        view {
+            $0.pullback(target)
+        }
     }
 }
