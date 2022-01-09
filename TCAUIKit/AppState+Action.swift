@@ -15,6 +15,8 @@ struct AppState {
         enum ActivityType {
             case addedFavoritePrime(Int)
             case removedFavoritePrime(Int)
+            case save([Int])
+            case load([Int])
         }
     }
 
@@ -29,14 +31,26 @@ enum AppAction {
     case counterView(CounterViewAction)
     case favoritePrimes(FavoritePrimesAction)
 
-    var counterView: CounterViewAction? {
-        guard case let .counterView(value) = self else { return nil }
-        return value
+    var favoritePrimes: FavoritePrimesAction? {
+        get {
+            guard case let .favoritePrimes(value) = self else { return nil }
+            return value
+        }
+        set {
+            guard case .favoritePrimes = self, let newValue = newValue else { return }
+            self = .favoritePrimes(newValue)
+        }
     }
 
-    var favoritePrimes: FavoritePrimesAction? {
-        guard case let .favoritePrimes(value) = self else { return nil }
-        return value
+    var counterView: CounterViewAction? {
+        get {
+            guard case let .counterView(value) = self else { return nil }
+            return value
+        }
+        set {
+            guard case .counterView = self, let newValue = newValue else { return }
+            self = .counterView(newValue)
+        }
     }
 }
 
@@ -65,7 +79,7 @@ func activityFeed(
     return { state, action in
         switch action {
         case .counterView(.counter),
-             .favoritePrimes(.loadedFavoritePrimes),
+             .favoritePrimes(.loadButtonTapped),
              .favoritePrimes(.saveButtonTapped):
             break
         case .counterView(.primeModal(.removeFavoritePrimeTapped)):
@@ -78,16 +92,23 @@ func activityFeed(
             for index in indexSet {
                 state.activityFeed.append(.init(timestamp: Date(), type: .removedFavoritePrime(state.favoritePrimes[index])))
             }
+
+        case let .favoritePrimes(.favoritePrimesLoaded(primes)):
+            state.activityFeed.append(.init(timestamp: Date(), type: .load(primes)))
         }
 
         reducer(&state, action)
-        return {}
+        return []
     }
 }
 
 let AppReducer: Reducer<AppState, AppAction> = with(
     { state, action in
-        appReducer(&state, action)()
+        let effects = appReducer(&state, action)
+        effects.forEach { effect in
+            guard let action = effect() else { return }
+            appReducer(&state, action)
+        }
     },
     compose(
         logging,

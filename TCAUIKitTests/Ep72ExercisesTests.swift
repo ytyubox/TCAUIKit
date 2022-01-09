@@ -14,7 +14,7 @@ final class Ep72ExercisesTests: XCTestCase {
         let store: Store<TestTarget, String> = Store(initialValue: TestTarget()) { value, action in
             value.inner.value = Int(action) ?? 0
             value.inner.string = String(action)
-            return {}
+            return []
         }
         let stringStore = store.view(value: \.inner.string,
                                      action: { $0 })
@@ -37,7 +37,7 @@ final class Ep72ExercisesTests: XCTestCase {
 
             value.inner = .init(string: String(action),
                                 value: Int(action) ?? 0)
-            return {}
+            return []
         }
         let stringStore: Store<State<String>, String> = store.view(
             value: \.inner.string,
@@ -72,7 +72,7 @@ final class Ep72ExercisesTests: XCTestCase {
 
             value.inner = .init(string: String(action),
                                 value: Int(action) ?? 0)
-            return {}
+            return []
         }
         let stringStore: Store<State<String>, String> = store.view(
             value: \.inner.string,

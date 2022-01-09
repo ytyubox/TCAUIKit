@@ -9,7 +9,7 @@ public enum CounterAction {
     case incrTapped
 }
 
-public func counterReducer(state: inout Int, action: CounterAction) -> Effect {
+public func counterReducer(state: inout Int, action: CounterAction) -> [Effect<CounterAction>] {
     switch action {
     case .decrTapped:
         state -= 1
@@ -17,7 +17,7 @@ public func counterReducer(state: inout Int, action: CounterAction) -> Effect {
     case .incrTapped:
         state += 1
     }
-    return {}
+    return []
 }
 
 public typealias CounterViewState = (count: Int, favoritePrimes: [Int])
@@ -25,14 +25,26 @@ public typealias CounterViewState = (count: Int, favoritePrimes: [Int])
 public enum CounterViewAction {
     case counter(CounterAction)
     case primeModal(PrimeModalAction)
-    public var counter: CounterAction? {
-        guard case let .counter(value) = self else { return nil }
-        return value
+    var counter: CounterAction? {
+        get {
+            guard case let .counter(value) = self else { return nil }
+            return value
+        }
+        set {
+            guard case .counter = self, let newValue = newValue else { return }
+            self = .counter(newValue)
+        }
     }
 
-    public var primeModal: PrimeModalAction? {
-        guard case let .primeModal(value) = self else { return nil }
-        return value
+    var primeModal: PrimeModalAction? {
+        get {
+            guard case let .primeModal(value) = self else { return nil }
+            return value
+        }
+        set {
+            guard case .primeModal = self, let newValue = newValue else { return }
+            self = .primeModal(newValue)
+        }
     }
 }
 
