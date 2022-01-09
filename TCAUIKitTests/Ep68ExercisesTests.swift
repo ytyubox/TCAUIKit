@@ -98,13 +98,11 @@ final class Ep68ExercisesTests: XCTestCase {
         }
         func FavoritePrimeReducer(value: inout AppState, action: AppAction) {
             switch action {
-            case let .favoritePrimes(favoritePrimesAction):
-                switch favoritePrimesAction {
-                case let .deleteFavoritePrimes(indexSet):
-                    for index in indexSet {
-                        value.favoritePrimes.remove(at: index)
-                    }
+            case let .favoritePrimes(.deleteFavoritePrimes(indexSet)):
+                for index in indexSet {
+                    value.favoritePrimes.remove(at: index)
                 }
+
             default: break
             }
         }

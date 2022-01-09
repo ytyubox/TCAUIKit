@@ -3,13 +3,28 @@ import ComposableArchitecture
 import UIKit
 public enum FavoritePrimesAction {
     case deleteFavoritePrimes(IndexSet)
+    case loadedFavoritePrimes([Int])
+    case saveButtonTapped
 }
 
-public func favoritePrimesReducer(state: inout [Int], action: FavoritePrimesAction) {
+public func favoritePrimesReducer(state: inout [Int], action: FavoritePrimesAction) -> Effect {
     switch action {
     case let .deleteFavoritePrimes(indexSet):
         for index in indexSet {
             state.remove(at: index)
+        }
+        return {}
+    case let .loadedFavoritePrimes(favoritePrimes):
+        state = favoritePrimes
+        return {}
+    case .saveButtonTapped:
+        return { [state] in
+            let data = try! JSONEncoder().encode(state)
+            let documentsPath = NSSearchPathForDirectoriesInDomains(
+                .documentDirectory, .userDomainMask, true
+            )[0]
+            let documentsUrl = URL(fileURLWithPath: documentsPath)
+            try! data.write(to: documentsUrl.appendingPathComponent("favorite-primes.json"))
         }
     }
 }
@@ -27,6 +42,14 @@ public class FavoritePrimesViewController: UITableViewController {
         super.viewDidLoad()
         title = "Favorite Primes"
         tableView.dataSource = dataSource
+        navigationController?.navigationItem.rightBarButtonItems = [
+            UIBarButtonItem(title: "Save", style: .plain,
+                            target: self,
+                            action: #selector(didTapSaveButton)),
+            UIBarButtonItem(title: "Load", style: .plain,
+                            target: self,
+                            action: #selector(didTapLoadButton)),
+        ]
     }
 
     override public func viewWillAppear(_ animated: Bool) {
@@ -67,5 +90,23 @@ public class FavoritePrimesViewController: UITableViewController {
         snapshot.appendSections([0])
         snapshot.appendItems(state, toSection: 0)
         return snapshot
+    }
+
+    @objc func didTapSaveButton() {
+        store.send(.saveButtonTapped)
+    }
+
+    @objc func didTapLoadButton() {
+        let documentsPath = NSSearchPathForDirectoriesInDomains(
+            .documentDirectory, .userDomainMask, true
+        )[0]
+        let documentsUrl = URL(fileURLWithPath: documentsPath)
+        let favoritePrimesUrl = documentsUrl
+            .appendingPathComponent("favorite-primes.json")
+        guard
+            let data = try? Data(contentsOf: favoritePrimesUrl),
+            let favoritePrimes = try? JSONDecoder().decode([Int].self, from: data)
+        else { return }
+        store.send(.loadedFavoritePrimes(favoritePrimes))
     }
 }

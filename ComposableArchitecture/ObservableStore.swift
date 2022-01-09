@@ -18,6 +18,7 @@ public class ObservableStore<Value, Action>: Store<Value, Action>, ObservableObj
                 localValue, localAction in
                 self.send(toGlobalAction(localAction))
                 localValue = toLocalValue(self.value)
+                return {}
             }
         )
         localStore.cancelable = objectWillChange.sink {

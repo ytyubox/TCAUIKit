@@ -12,6 +12,7 @@ final class Ep75ExercisesTests: XCTestCase {
             initialValue: Target(),
             reducer: {
                 $0.count += Int($1)!
+                return {}
             }
         )
         let binding = sut.send(

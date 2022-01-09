@@ -40,9 +40,8 @@ enum AppAction {
     }
 }
 
-let appReducer: (inout AppState, AppAction) -> Void = combine(
+let appReducer: Reducer<AppState, AppAction> = combine(
     pullback(counterViewReducer, value: \.counterView, action: \.counterView),
-
     pullback(favoritePrimesReducer, value: \.favoritePrimes, action: \.favoritePrimes)
 )
 extension AppState {
@@ -62,10 +61,12 @@ extension AppState {
 
 func activityFeed(
     _ reducer: @escaping (inout AppState, AppAction) -> Void
-) -> (inout AppState, AppAction) -> Void {
+) -> Reducer<AppState, AppAction> {
     return { state, action in
         switch action {
-        case .counterView(.counter):
+        case .counterView(.counter),
+             .favoritePrimes(.loadedFavoritePrimes),
+             .favoritePrimes(.saveButtonTapped):
             break
         case .counterView(.primeModal(.removeFavoritePrimeTapped)):
             state.activityFeed.append(.init(timestamp: Date(), type: .removedFavoritePrime(state.count)))
@@ -80,11 +81,14 @@ func activityFeed(
         }
 
         reducer(&state, action)
+        return {}
     }
 }
 
-let AppReducer = with(
-    appReducer,
+let AppReducer: Reducer<AppState, AppAction> = with(
+    { state, action in
+        appReducer(&state, action)()
+    },
     compose(
         logging,
         activityFeed
