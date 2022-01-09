@@ -10,10 +10,12 @@
 import Combine
 import ComposableArchitecture
 import UIKit
+import PrimeModal
 
 // MARK: - ViewController
 
 typealias AppStore = Store<State<AppState>, AppAction>
+typealias StateStore<Value> = Store<State<Value>, AppAction>
 class ViewController: UITableViewController {
     let store: AppStore =
         Store(initialValue:
@@ -47,7 +49,7 @@ class ViewController: UITableViewController {
 
     lazy var rows = [Row(text: "Counter demo", link: {
         let vc = CounterViewController.make(from: .main, id: "CounterViewController")
-        vc.store = self.store
+        vc.store = self.store.view{($0.count, $0.favoritePrimes)}
         return vc
     }),
     Row(text: "Favorite primes", link: {
@@ -75,9 +77,9 @@ class ViewController: UITableViewController {
 }
 
 // MARK: - CounterViewController
-
+typealias CounterViewState = (count: Int, favoritePrimes: [Int])
 class CounterViewController: UIViewController {
-    var store: AppStore = .needInject
+    var store: StateStore<CounterViewState> = .needInject
     @IBOutlet private var label: UILabel!
     @IBOutlet private var nthPrimeButton: UIButton!
     var cancelable: Cancellable?
@@ -109,7 +111,7 @@ class CounterViewController: UIViewController {
 
     @IBAction func didTapIsThisPrimeButton(_: UIButton) {
         let vc = IsPrimeModelViewController.make(from: .main, id: "IsPrimeModelViewController")
-        vc.store = store
+        vc.store = store.view{($0.count, $0.favoritePrimes)}
         present(vc, animated: true, completion: nil)
     }
 
@@ -133,7 +135,7 @@ class CounterViewController: UIViewController {
 // MARK: - IsPrimeModelViewController
 
 class IsPrimeModelViewController: UIViewController {
-    var store: AppStore = .needInject
+    var store: StateStore<PrimeModalState> = .needInject
     @IBOutlet var label: UILabel!
     @IBOutlet var button: UIButton!
 
@@ -170,7 +172,7 @@ class IsPrimeModelViewController: UIViewController {
 // MARK: - FavoritePrimesViewController
 
 class FavoritePrimesViewController: UITableViewController {
-    var store: Store<State<[Int]>, AppAction> = .needInject
+    var store: StateStore<[Int]> = .needInject
     var cancelable: Cancellable?
     lazy var dataSource = UITableViewDiffableDataSource<Int, Int>(tableView: tableView) { _, _, itemIdentifier in
         let cell = UITableViewCell()

@@ -1,26 +1,41 @@
-import Combine
 import Foundation
 
 public final class Store<Value, Action> {
     private let reducer: (inout Value, Action) -> Void
-    public private(set) var value: Value!
-
+    public var value: Value {
+        storage.value
+    }
+    private var storage: Storage
+    private enum Storage {
+        case some(Value)
+        case none
+        var value:Value {
+            get {
+                switch self {
+                    case .some(let value): return value
+                    case .none: fatalError()
+                }
+            } set {
+                self = .some(newValue)
+            }
+        }
+    }
     public init(initialValue: Value, reducer: @escaping (inout Value, Action) -> Void) {
         self.reducer = reducer
-        value = initialValue
+        storage = .some(initialValue)
     }
-
+    
     public func send(_ action: Action) {
-        reducer(&value, action)
+        reducer(&storage.value, action)
     }
-
+    
     // MARK: - Helper
-
+    
     private init() {
-        value = nil
+        storage = .none
         reducer = { _, _ in }
     }
-
+    
     public static var needInject: Store<Value, Action> {
         self.init()
     }

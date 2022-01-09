@@ -1,6 +1,17 @@
 import Combine
 import ComposableArchitecture
 import UIKit
+protocol Publishing {
+    associatedtype Value
+
+    var publisher: AnyPublisher<Value, Never> { get }
+}
+
+extension Store: Publishing where Value: Publishing {
+    var publisher: AnyPublisher<Value.Value, Never> {
+        value.publisher
+    }
+}
 
 // MARK: - State
 
@@ -83,10 +94,18 @@ struct State<Value>: Publishing {
 
 extension Store {
     func view<Inner, Target>(_ target: WritableKeyPath<Inner, Target>) -> Store<State<Target>, Action>
-        where Value == State<Inner>
+    where Value == State<Inner>
     {
         view {
             $0.pullback(target)
         }
     }
+    func view<Inner, Target>(_ f:@escaping (Inner) -> Target) -> Store<State<Target>, Action>
+    where Value == State<Inner>
+    {
+        view {
+            $0.pullback(getter: f, setter: {_,_ in })
+        }
+    }
 }
+
