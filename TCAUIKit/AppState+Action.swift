@@ -6,6 +6,8 @@ struct AppState {
     var count = 0
     var favoritePrimes: [Int] = []
     var loggedInUser: User? = nil
+    var alertNthPrime: String?
+    var isNthPrimeButtonEnabled = true
     var activityFeed: [Activity] = []
 
     struct Activity {
@@ -17,6 +19,7 @@ struct AppState {
             case removedFavoritePrime(Int)
             case save([Int])
             case load([Int])
+            case nthPrimeResponse(Int?)
         }
     }
 
@@ -54,27 +57,26 @@ enum AppAction {
     }
 }
 
-let appReducer: Reducer<AppState, AppAction> = combine(
-    pullback(counterViewReducer, value: \.counterView, action: \.counterView),
-    pullback(favoritePrimesReducer, value: \.favoritePrimes, action: \.favoritePrimes)
-)
 extension AppState {
     var counterView: CounterViewState {
         get {
             CounterViewState(
                 count: count,
+                isNthPrimeButtonEnabled: isNthPrimeButtonEnabled,
                 favoritePrimes: favoritePrimes
             )
         }
         set {
             count = newValue.count
             favoritePrimes = newValue.favoritePrimes
+            isNthPrimeButtonEnabled = newValue.isNthPrimeButtonEnabled
+            alertNthPrime = newValue.alertNthPrime
         }
     }
 }
 
 func activityFeed(
-    _ reducer: @escaping (inout AppState, AppAction) -> Void
+    _ reducer: @escaping Reducer<AppState, AppAction>
 ) -> Reducer<AppState, AppAction> {
     return { state, action in
         switch action {
@@ -82,6 +84,7 @@ func activityFeed(
              .favoritePrimes(.loadButtonTapped),
              .favoritePrimes(.saveButtonTapped):
             break
+
         case .counterView(.primeModal(.removeFavoritePrimeTapped)):
             state.activityFeed.append(.init(timestamp: Date(), type: .removedFavoritePrime(state.count)))
 
@@ -97,21 +100,15 @@ func activityFeed(
             state.activityFeed.append(.init(timestamp: Date(), type: .load(primes)))
         }
 
-        reducer(&state, action)
-        return []
+        return reducer(&state, action)
     }
 }
 
+let appReducer: Reducer<AppState, AppAction> = combine(
+    pullback(counterViewReducer, value: \.counterView, action: \.counterView),
+    pullback(favoritePrimesReducer, value: \.favoritePrimes, action: \.favoritePrimes)
+)
 let AppReducer: Reducer<AppState, AppAction> = with(
-    { state, action in
-        let effects = appReducer(&state, action)
-        effects.forEach { effect in
-            guard let action = effect() else { return }
-            appReducer(&state, action)
-        }
-    },
-    compose(
-        logging,
-        activityFeed
-    )
+    appReducer,
+    compose(logging, activityFeed)
 )

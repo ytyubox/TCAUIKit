@@ -1,6 +1,12 @@
 import Foundation
+
+struct Parallel<A> {
+    let run: (@escaping (A) -> Void) -> Void
+}
+
 public typealias Reducer<Value, Action> = (inout Value, Action) -> [Effect<Action>]
-public typealias Effect<Action> = () -> Action?
+public typealias Callback<Action> = (Action) -> Void
+public typealias Effect<Action> = (@escaping Callback<Action>) -> Void
 
 public class Store<Value, Action> {
     private let reducer: Reducer<Value, Action>
@@ -36,8 +42,9 @@ public class Store<Value, Action> {
 
     public func send(_ action: Action) {
         let effects = reducer(&storage.value, action)
-        effects.compactMap { $0() }.forEach { _ in
-            self.send(action)
+        effects.forEach {
+            effect in
+            effect(self.send)
         }
     }
 
@@ -69,10 +76,7 @@ public func combine<Value, Action>(
     _ reducers: Reducer<Value, Action>...
 ) -> Reducer<Value, Action> {
     return { value, action in
-        var effects: [Effect<Action>] = []
-        for reducer in reducers {
-            effects.append(contentsOf: reducer(&value, action))
-        }
+        let effects = reducers.flatMap { $0(&value, action) }
         return effects
     }
 }
@@ -86,12 +90,12 @@ public func pullback<LocalValue, GlobalValue, GlobalAction, LocalAction>(
         guard let localAction = globalAction[keyPath: action] else { return [] }
         let localEffects = reducer(&globalValue[keyPath: value], localAction)
         return localEffects.map { localEffect in
-            {
-                () -> GlobalAction? in
-                guard let localAction = localEffect() else { return nil }
-                var globalAction = globalAction
-                globalAction[keyPath: action] = localAction
-                return globalAction
+            { callback in
+                localEffect { localAction in
+                    var globalAction = globalAction
+                    globalAction[keyPath: action] = localAction
+                    callback(globalAction)
+                }
             }
         }
     }
@@ -102,12 +106,11 @@ public func logging<Value, Action>(
 ) -> Reducer<Value, Action> {
     return { value, action in
         let effects = reducer(&value, action)
-        return [{ [value] in
+        return [{ [value] _ in
             print("Action: \(action)")
             print("Value:")
             dump(value)
             print("---")
-            return nil
         }] + effects
     }
 }

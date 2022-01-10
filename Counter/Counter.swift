@@ -2,29 +2,92 @@ import Combine
 import ComposableArchitecture
 import Foundation
 import PrimeModal
+import SwiftUI
 import UIKit
 import UIKitHelper
 public enum CounterAction {
     case decrTapped
     case incrTapped
+    case nthPrimeButtonTapped
+    case nthPrimeResponse(Int?)
+    case nthPrimeDismissButtonTapped
 }
 
-public func counterReducer(state: inout Int, action: CounterAction) -> [Effect<CounterAction>] {
+public struct CounterState {
+    public init(alertNthPrime: String? = nil, count: Int, isNthPrimeButtonEnabled: Bool) {
+        self.alertNthPrime = alertNthPrime
+        self.count = count
+        self.isNthPrimeButtonEnabled = isNthPrimeButtonEnabled
+    }
+
+    var alertNthPrime: String?
+    var count: Int
+    var isNthPrimeButtonEnabled: Bool
+}
+
+public func counterReducer(state: inout CounterState, action: CounterAction) -> [Effect<CounterAction>] {
     switch action {
     case .decrTapped:
-        state -= 1
-
+        state.count -= 1
+        return []
     case .incrTapped:
-        state += 1
+        state.count += 1
+        return []
+    case .nthPrimeButtonTapped:
+        state.isNthPrimeButtonEnabled = false
+        let count = state.count
+        return [{ callback in
+            nthPrime(count) { prime in
+                callback(.nthPrimeResponse(prime))
+            }
+        }]
+    case let .nthPrimeResponse(prime):
+        state.alertNthPrime = prime.map { prime in
+            "The \(ordinal(state.count)) prime is \(prime)"
+        }
+        state.isNthPrimeButtonEnabled = true
+        return []
+    case .nthPrimeDismissButtonTapped:
+        state.alertNthPrime = nil
+        return []
     }
-    return []
 }
 
-public typealias CounterViewState = (count: Int, favoritePrimes: [Int])
+public struct CounterViewState {
+    public init(alertNthPrime: String? = nil, count: Int, isNthPrimeButtonEnabled: Bool, favoritePrimes: [Int]) {
+        self.alertNthPrime = alertNthPrime
+        self.count = count
+        self.isNthPrimeButtonEnabled = isNthPrimeButtonEnabled
+        self.favoritePrimes = favoritePrimes
+    }
+
+    public var alertNthPrime: String?
+    public var count: Int
+    public var isNthPrimeButtonEnabled: Bool
+    public var favoritePrimes: [Int]
+    var CounterState: CounterState {
+        get {
+            Counter.CounterState(alertNthPrime: alertNthPrime, count: count, isNthPrimeButtonEnabled: isNthPrimeButtonEnabled)
+        }
+        set {
+            (count, isNthPrimeButtonEnabled, alertNthPrime) = (newValue.count, newValue.isNthPrimeButtonEnabled, newValue.alertNthPrime)
+        }
+    }
+
+    var primeModalState: PrimeModalState {
+        get {
+            PrimeModalState(count: count, favoritePrimes: favoritePrimes)
+        }
+        set {
+            (count, favoritePrimes) = (newValue.count, newValue.favoritePrimes)
+        }
+    }
+}
 
 public enum CounterViewAction {
     case counter(CounterAction)
     case primeModal(PrimeModalAction)
+
     var counter: CounterAction? {
         get {
             guard case let .counter(value) = self else { return nil }
@@ -49,14 +112,15 @@ public enum CounterViewAction {
 }
 
 public let counterViewReducer: Reducer<CounterViewState, CounterViewAction> = combine(
-    pullback(counterReducer, value: \.count, action: \.counter),
-    pullback(primeModalReducer, value: \.self, action: \.primeModal)
+    pullback(counterReducer, value: \.CounterState, action: \.counter),
+    pullback(primeModalReducer, value: \.primeModalState, action: \.primeModal)
 )
 public class CounterViewController: UIViewController {
     public var store: StateStore<CounterViewState, CounterViewAction> = .needInject
     @IBOutlet private var label: UILabel!
     @IBOutlet private var nthPrimeButton: UIButton!
     var cancelable: Cancellable?
+    var alert: UIAlertController?
     override public func viewDidLoad() {
         super.viewDidLoad()
         title = "Counter demo"
@@ -67,6 +131,27 @@ public class CounterViewController: UIViewController {
         cancelable = store.publisher.sink { [self] state in
             label?.text = state.count.description
             nthPrimeButton?.setTitle("What is the \(ordinal(state.count)) prime?", for: .normal)
+            nthPrimeButton.isEnabled = state.isNthPrimeButtonEnabled
+            if let alertNthPrime = state.alertNthPrime {
+                let alert = UIAlertController(
+                    title: alertNthPrime,
+                    message: nil,
+                    preferredStyle: .alert
+                )
+                alert.addAction(UIAlertAction(
+                    title: "ok",
+                    style: .default,
+                    handler: { _ in
+                        store.send(.counter(.nthPrimeDismissButtonTapped))
+                    }
+                ))
+
+                self.present(alert, animated: true, completion: {
+                    self.alert = alert
+                })
+            } else {
+                alert?.dismiss(animated: true, completion: nil)
+            }
         }
     }
 
@@ -91,19 +176,7 @@ public class CounterViewController: UIViewController {
     }
 
     @IBAction func didTapWhatNthPrimeButton(_: UIButton) {
-        nthPrimeButton.isEnabled = false
-        nthPrime(store.value.count) { prime in
-            DispatchQueue.main.async {
-                if let prime = prime {
-                    let alert = UIAlertController(title: "The \(ordinal(self.store.value.count)) prime is \(prime)", message: nil, preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "ok", style: .default, handler: { _ in
-                        alert.dismiss(animated: true, completion: nil)
-                    }))
-                    self.present(alert, animated: true, completion: nil)
-                }
-                self.nthPrimeButton.isEnabled = true
-            }
-        }
+        store.send(.counter(.nthPrimeButtonTapped))
     }
 }
 

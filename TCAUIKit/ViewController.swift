@@ -50,7 +50,12 @@ class ViewController: UITableViewController {
         Row(text: "Counter demo") {
             let vc = CounterViewController.make(from: .main, id: "CounterViewController")
             vc.store = self.store.view(
-                value: { ($0.count, $0.favoritePrimes) },
+                value: { CounterViewState(
+                    alertNthPrime: $0.alertNthPrime,
+                    count: $0.count,
+                    isNthPrimeButtonEnabled: $0.isNthPrimeButtonEnabled,
+                    favoritePrimes: $0.favoritePrimes
+                ) },
                 action: { .counterView($0) }
             )
             return vc

@@ -43,7 +43,7 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>6</integer>
+			<integer>7</integer>
 		</dict>
 		<key>PrimeModal.xcscheme_^#shared#^_</key>
 		<dict>
@@ -74,6 +74,11 @@
 			<true/>
 		</dict>
 		<key>D282FF372789B05D00E2C54C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D282FF532789B17C00E2C54C</key>
 		<dict>
 			<key>primary</key>
 			<true/>

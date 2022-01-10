@@ -18,7 +18,7 @@ class ComposableArchitectureTests: XCTestCase {
         }
         let store = ObservableStore<Target, String>(initialValue: Target()) {
             ($0.count, $0.string) = (Int($1) ?? 0, $1)
-            return {}
+            return []
         }
 
         let countStore = store.view(value: \.count, action: { $0 })
