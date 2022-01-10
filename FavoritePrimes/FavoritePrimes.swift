@@ -25,7 +25,7 @@ public func favoritePrimesReducer(state: inout [Int], action: FavoritePrimesActi
     }
 }
 
-private let loadEffect: Effect<FavoritePrimesAction> = { callback in
+private let loadEffect: Effect<FavoritePrimesAction> = Effect { callback in
     let documentsPath = NSSearchPathForDirectoriesInDomains(
         .documentDirectory, .userDomainMask, true
     )[0]
@@ -40,7 +40,7 @@ private let loadEffect: Effect<FavoritePrimesAction> = { callback in
 }
 
 private func saveEffect(favoritePrimes: [Int]) -> Effect<FavoritePrimesAction> {
-    return { _ in
+    return Effect { _ in
         let data = try! JSONEncoder().encode(favoritePrimes)
         let documentsPath = NSSearchPathForDirectoriesInDomains(
             .documentDirectory, .userDomainMask, true

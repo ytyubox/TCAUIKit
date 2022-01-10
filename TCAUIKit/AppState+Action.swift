@@ -6,10 +6,11 @@ struct AppState {
     var count = 0
     var favoritePrimes: [Int] = []
     var loggedInUser: User? = nil
-    var alertNthPrime: String?
+    var alertNthPrime: String? = nil
     var isNthPrimeButtonEnabled = true
     var activityFeed: [Activity] = []
-
+    var isPrime: Bool? = nil
+    var isPresentPrimeModal:Bool = false
     struct Activity {
         let timestamp: Date
         let type: ActivityType
@@ -58,19 +59,31 @@ enum AppAction {
 }
 
 extension AppState {
-    var counterView: CounterViewState {
+    var counterViewState: CounterViewState {
         get {
             CounterViewState(
+                alertNthPrime: alertNthPrime,
                 count: count,
                 isNthPrimeButtonEnabled: isNthPrimeButtonEnabled,
-                favoritePrimes: favoritePrimes
+                favoritePrimes: favoritePrimes,
+                isPrime: isPrime, isPresentPrimeModal: isPresentPrimeModal
             )
         }
         set {
-            count = newValue.count
-            favoritePrimes = newValue.favoritePrimes
-            isNthPrimeButtonEnabled = newValue.isNthPrimeButtonEnabled
-            alertNthPrime = newValue.alertNthPrime
+            (count,
+             favoritePrimes,
+             isNthPrimeButtonEnabled,
+             alertNthPrime,
+             isPrime,
+             isPresentPrimeModal
+            ) = (
+                newValue.count,
+                newValue.favoritePrimes,
+                newValue.isNthPrimeButtonEnabled,
+                newValue.alertNthPrime,
+                newValue.isPrime,
+                newValue.isPresentPrimeModal
+            )
         }
     }
 }
@@ -82,7 +95,9 @@ func activityFeed(
         switch action {
         case .counterView(.counter),
              .favoritePrimes(.loadButtonTapped),
-             .favoritePrimes(.saveButtonTapped):
+             .favoritePrimes(.saveButtonTapped),
+                    .counterView(.primeModal(.startLoadingIsPrime)),
+                    .counterView(.primeModal(.isPrimeResponse(_))):
             break
 
         case .counterView(.primeModal(.removeFavoritePrimeTapped)):
@@ -98,6 +113,7 @@ func activityFeed(
 
         case let .favoritePrimes(.favoritePrimesLoaded(primes)):
             state.activityFeed.append(.init(timestamp: Date(), type: .load(primes)))
+          
         }
 
         return reducer(&state, action)
@@ -105,7 +121,7 @@ func activityFeed(
 }
 
 let appReducer: Reducer<AppState, AppAction> = combine(
-    pullback(counterViewReducer, value: \.counterView, action: \.counterView),
+    pullback(counterViewReducer, value: \.counterViewState, action: \.counterView),
     pullback(favoritePrimesReducer, value: \.favoritePrimes, action: \.favoritePrimes)
 )
 let AppReducer: Reducer<AppState, AppAction> = with(

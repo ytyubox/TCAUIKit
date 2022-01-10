@@ -17,9 +17,7 @@ extension Store: Publishing where Value: Publishing {
 public typealias StateStore<Value, Action> = Store<State<Value>, Action>
 @dynamicMemberLookup
 public struct State<Value>: Publishing {
-    private let getter: () -> Value
-    private let setter: (Value) -> Void
-    public let publisher: AnyPublisher<Value, Never>
+  
 
     public var value: Value {
         get { getter() }
@@ -73,7 +71,10 @@ public struct State<Value>: Publishing {
         self.viewing(getter: { $0[keyPath: target] },
                      setter: { $0[keyPath: target] = $1 })
     }
-
+    private let getter: () -> Value
+    private let setter: (Value) -> Void
+    public let publisher: AnyPublisher<Value, Never>
+    
     public func viewing<TargetValue>(
         getter targetGetter: @escaping (Value) -> TargetValue,
         setter targetSetter: @escaping (inout Value, TargetValue) -> Void
