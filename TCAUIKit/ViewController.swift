@@ -19,7 +19,7 @@ class ViewController: UITableViewController {
     let store: StateStore<AppState, AppAction> =
         Store(initialValue:
             .hot(
-                AppState(count: 0, favoritePrimes: [])
+                AppState()
             )
         ) {
             state, action in
@@ -50,12 +50,7 @@ class ViewController: UITableViewController {
         Row(text: "Counter demo") {
             let vc = CounterViewController.make(from: .main, id: "CounterViewController")
             vc.store = self.store.view(
-                value: { CounterViewState(
-                    alertNthPrime: $0.alertNthPrime,
-                    count: $0.count,
-                    isNthPrimeButtonEnabled: $0.isNthPrimeButtonEnabled,
-                    favoritePrimes: $0.favoritePrimes
-                ) },
+                value: \.counterViewState,
                 action: { .counterView($0) }
             )
             return vc

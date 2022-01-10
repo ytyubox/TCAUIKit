@@ -1,3 +1,4 @@
+import CoreText
 import Foundation
 
 struct Parallel<A> {
@@ -6,7 +7,21 @@ struct Parallel<A> {
 
 public typealias Reducer<Value, Action> = (inout Value, Action) -> [Effect<Action>]
 public typealias Callback<Action> = (Action) -> Void
-public typealias Effect<Action> = (@escaping Callback<Action>) -> Void
+
+public struct Effect<Action> {
+    public init(run: @escaping (@escaping Callback<Action>) -> Void) {
+        self.run = run
+    }
+
+    private let run: (@escaping Callback<Action>) -> Void
+    public func run(_ callback: @escaping Callback<Action>) {
+        run(callback)
+    }
+
+    public func map<B>(_ f: @escaping (Action) -> B) -> Effect<B> {
+        Effect<B> { callback in self.run { a in callback(f(a)) } }
+    }
+}
 
 public class Store<Value, Action> {
     private let reducer: Reducer<Value, Action>
@@ -44,7 +59,7 @@ public class Store<Value, Action> {
         let effects = reducer(&storage.value, action)
         effects.forEach {
             effect in
-            effect(self.send)
+            effect.run(self.send)
         }
     }
 
@@ -63,7 +78,8 @@ public class Store<Value, Action> {
         value toLocalValue: @escaping (Value) -> LocalValue,
         action toGlobalAction: @escaping (LocalAction) -> Action
     ) -> Store<LocalValue, LocalAction> {
-        Store<LocalValue, LocalAction>(initialValue: toLocalValue(value)) {
+        let value = value
+        return Store<LocalValue, LocalAction>(initialValue: toLocalValue(value)) {
             localValue, localAction in
             self.send(toGlobalAction(localAction))
             localValue = toLocalValue(self.value)
@@ -90,12 +106,10 @@ public func pullback<LocalValue, GlobalValue, GlobalAction, LocalAction>(
         guard let localAction = globalAction[keyPath: action] else { return [] }
         let localEffects = reducer(&globalValue[keyPath: value], localAction)
         return localEffects.map { localEffect in
-            { callback in
-                localEffect { localAction in
-                    var globalAction = globalAction
-                    globalAction[keyPath: action] = localAction
-                    callback(globalAction)
-                }
+            localEffect.map { localAction in
+                var globalAction = globalAction
+                globalAction[keyPath: action] = localAction
+                return globalAction
             }
         }
     }
@@ -106,11 +120,30 @@ public func logging<Value, Action>(
 ) -> Reducer<Value, Action> {
     return { value, action in
         let effects = reducer(&value, action)
-        return [{ [value] _ in
+        return [Effect { [value] _ in
             print("Action: \(action)")
             print("Value:")
             dump(value)
             print("---")
         }] + effects
+    }
+}
+
+public extension Effect {
+    func receive(on queue: DispatchQueue) -> Effect {
+        return Effect { callback in
+            self.run { a in
+                queue.async { callback(a) }
+            }
+        }
+    }
+    func run(on queue: DispatchQueue) -> Effect {
+        return Effect { callback in
+            queue.async {
+                self.run { a in
+                    callback(a)
+                }
+            }
+        }
     }
 }
